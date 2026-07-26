@@ -8,12 +8,13 @@
  * question qui ne convient pas, et rejouer à l'infini.
  */
 import * as Haptics from 'expo-haptics';
-import React, { useMemo, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Animated, Pressable, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Button from '../components/Button';
 import { PACKS, isDuo, questionText } from '../data/questions';
 import { ScreenProps } from '../navigation';
+import { shouldShowInterstitialOnGameExit } from '../services/ads';
 import { useApp } from '../state/AppContext';
 import { colors, font, radius, spacing } from '../theme';
 
@@ -35,8 +36,19 @@ function shuffle<T>(items: T[]): T[] {
 }
 
 export default function GameScreen({ navigation, route }: ScreenProps<'Game'>) {
-  const { playerA, playerB } = useApp();
+  const { playerA, playerB, isPremium } = useApp();
   const { packIds } = route.params;
+
+  // Interstitiel de fin de session : déclenché en quittant l'écran de
+  // jeu (bouton retour ou fin de pioche), jamais pour les Premium.
+  useEffect(() => {
+    return navigation.addListener('beforeRemove', () => {
+      if (shouldShowInterstitialOnGameExit(isPremium)) {
+        // Production : InterstitialAd.show() (annonce préchargée au
+        // montage de l'écran) — voir src/services/ads.ts.
+      }
+    });
+  }, [navigation, isPremium]);
 
   const [deck, setDeck] = useState<GameQuestion[]>(() => buildDeck(packIds));
   const [index, setIndex] = useState(0);
