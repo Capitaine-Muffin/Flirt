@@ -1,6 +1,6 @@
-# 💘 Flirt
+# Flirt.
 
-**Le jeu qui transforme un date en vraie rencontre.**
+**Se découvrir, tout simplement.**
 
 Flirt est une app mobile (iOS + Android) à sortir pendant un rendez-vous :
 elle propose des questions auxquelles les deux personnes répondent à tour de
@@ -12,8 +12,12 @@ entre soi et la conversation démarre toute seule.
 - **Simple avant tout** : 3 tapes suffisent pour lancer une partie
   (prénoms → thèmes → jouer). L'app est pensée pour être dégainée en plein
   date sans mode d'emploi.
-- **Une question à la fois**, en plein écran, avec le prénom de la personne
-  qui doit répondre. On touche la carte pour passer à la suivante.
+- **Une question à la fois**, en plein écran. Mécanique « Mix » : selon la
+  nature de la question, elle s'adresse à une personne (« Question pour
+  Léa » — et l'autre la lit à voix haute) ou aux deux (« Tu préfères »,
+  débats : « Question pour vous deux »). L'alternance des tours ne compte
+  que les questions solo, pour rester équitable. On touche la carte pour
+  passer à la suivante.
 - **On peut passer** une question qui ne convient pas (elle revient en fin
   de pioche, elle n'est pas perdue).
 - **Des thèmes gradués en intensité** (🌶️ → 🌶️🌶️🌶️) : du brise-glace au

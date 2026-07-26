@@ -13,11 +13,11 @@ export default function HomeScreen({ navigation }: ScreenProps<'Home'>) {
   return (
     <SafeAreaView style={styles.safe}>
       <View style={styles.hero}>
-        <Text style={styles.logo}>💘</Text>
-        <Text style={styles.title}>Flirt</Text>
-        <Text style={styles.tagline}>
-          Le jeu qui transforme un date{'\n'}en vraie rencontre.
+        <Text style={styles.title}>
+          Flirt
+          <Text style={styles.titleDot}>.</Text>
         </Text>
+        <Text style={styles.tagline}>Se découvrir, tout simplement.</Text>
       </View>
 
       <View style={styles.actions}>
@@ -45,14 +45,13 @@ export default function HomeScreen({ navigation }: ScreenProps<'Home'>) {
 const styles = StyleSheet.create({
   safe: { flex: 1, backgroundColor: colors.background },
   hero: { flex: 1, alignItems: 'center', justifyContent: 'center' },
-  logo: { fontSize: 72 },
   title: {
     color: colors.text,
-    fontSize: 52,
+    fontSize: 60,
     fontWeight: '900',
-    letterSpacing: 4,
-    marginTop: spacing.sm,
+    letterSpacing: 5,
   },
+  titleDot: { color: colors.primary },
   tagline: {
     color: colors.textMuted,
     fontSize: font.body,

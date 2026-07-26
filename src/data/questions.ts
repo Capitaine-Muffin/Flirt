@@ -14,6 +14,12 @@ export interface QuestionPack {
   description: string;
   /** 1 = tout doux, 3 = intense */
   intensity: 1 | 2 | 3;
+  /**
+   * Questions qui se jouent naturellement à deux (« Tu préfères »,
+   * débats…) : la carte s'adresse alors aux deux joueurs au lieu
+   * d'alterner. C'est la mécanique « Mix » du jeu.
+   */
+  duo?: boolean;
   premium: boolean;
   /** Identifiant produit App Store / Play Store, pour les packs premium. */
   productId?: string;
@@ -87,6 +93,7 @@ export const PACKS: QuestionPack[] = [
     emoji: '⚖️',
     description: 'Des choix impossibles qui en disent long.',
     intensity: 1,
+    duo: true,
     premium: false,
     questions: [
       "Tu préfères… pouvoir voler ou être invisible ?",
@@ -214,6 +221,7 @@ export const PACKS: QuestionPack[] = [
     emoji: '🤔',
     description: 'Des sujets qui divisent pour débattre en s\'amusant.',
     intensity: 2,
+    duo: true,
     premium: true,
     productId: 'flirt_pack_dilemmes',
     questions: [

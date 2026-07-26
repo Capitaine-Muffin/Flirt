@@ -1,9 +1,11 @@
 /**
  * L'écran de jeu — le moment du date.
  *
- * Une question à la fois, en plein écran, à tour de rôle. Zéro publicité
- * ici : rien ne doit casser le rythme de la conversation. On peut passer
- * une question qui ne convient pas, et rejouer à l'infini.
+ * Une question à la fois, en plein écran. Mécanique « Mix » : selon la
+ * nature de la question, elle s'adresse à une personne (l'autre la lit à
+ * voix haute) ou aux deux (« Tu préfères », débats). Zéro publicité ici :
+ * rien ne doit casser le rythme de la conversation. On peut passer une
+ * question qui ne convient pas, et rejouer à l'infini.
  */
 import * as Haptics from 'expo-haptics';
 import React, { useMemo, useRef, useState } from 'react';
@@ -19,6 +21,8 @@ interface GameQuestion {
   text: string;
   packEmoji: string;
   packTitle: string;
+  /** solo = une personne répond, duo = les deux répondent. */
+  kind: 'solo' | 'duo';
 }
 
 function shuffle<T>(items: T[]): T[] {
@@ -36,6 +40,9 @@ export default function GameScreen({ navigation, route }: ScreenProps<'Game'>) {
 
   const [deck, setDeck] = useState<GameQuestion[]>(() => buildDeck(packIds));
   const [index, setIndex] = useState(0);
+  // Nombre de questions solo déjà jouées : l'alternance des tours ne
+  // compte que celles-là, pour rester équitable malgré les questions duo.
+  const [soloCount, setSoloCount] = useState(0);
   const fade = useRef(new Animated.Value(1)).current;
 
   const names = useMemo(() => {
@@ -46,10 +53,12 @@ export default function GameScreen({ navigation, route }: ScreenProps<'Game'>) {
 
   const finished = index >= deck.length;
   const current = finished ? null : deck[index];
-  const currentPlayer = names[index % 2];
+  const responder = names[soloCount % 2];
+  const asker = names[(soloCount + 1) % 2];
 
   const goNext = () => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light).catch(() => {});
+    if (current?.kind === 'solo') setSoloCount((n) => n + 1);
     Animated.timing(fade, { toValue: 0, duration: 140, useNativeDriver: true }).start(() => {
       setIndex((i) => i + 1);
       Animated.timing(fade, { toValue: 1, duration: 180, useNativeDriver: true }).start();
@@ -66,6 +75,7 @@ export default function GameScreen({ navigation, route }: ScreenProps<'Game'>) {
   const replay = () => {
     setDeck(buildDeck(packIds));
     setIndex(0);
+    setSoloCount(0);
   };
 
   if (finished) {
@@ -106,7 +116,17 @@ export default function GameScreen({ navigation, route }: ScreenProps<'Game'>) {
           <Text style={styles.packLabel}>
             {current!.packEmoji} {current!.packTitle}
           </Text>
-          <Text style={styles.turn}>Au tour de {currentPlayer}</Text>
+          {current!.kind === 'duo' ? (
+            <>
+              <Text style={[styles.turn, styles.turnDuo]}>Question pour vous deux</Text>
+              <Text style={styles.asker}>Répondez chacun à votre tour</Text>
+            </>
+          ) : (
+            <>
+              <Text style={styles.turn}>Question pour {responder}</Text>
+              <Text style={styles.asker}>{asker}, lis-lui la question</Text>
+            </>
+          )}
           <Text style={styles.question}>{current!.text}</Text>
           <Text style={styles.tapHint}>Touchez la carte pour la question suivante</Text>
         </Animated.View>
@@ -121,7 +141,14 @@ export default function GameScreen({ navigation, route }: ScreenProps<'Game'>) {
 
 function buildDeck(packIds: string[]): GameQuestion[] {
   const questions = PACKS.filter((p) => packIds.includes(p.id)).flatMap((p) =>
-    p.questions.map((text) => ({ text, packEmoji: p.emoji, packTitle: p.title })),
+    p.questions.map(
+      (text): GameQuestion => ({
+        text,
+        packEmoji: p.emoji,
+        packTitle: p.title,
+        kind: p.duo ? 'duo' : 'solo',
+      }),
+    ),
   );
   return shuffle(questions);
 }
@@ -166,6 +193,13 @@ const styles = StyleSheet.create({
     fontWeight: '800',
     textAlign: 'center',
     marginTop: spacing.md,
+  },
+  turnDuo: { color: colors.gold },
+  asker: {
+    color: colors.textMuted,
+    fontSize: font.small,
+    textAlign: 'center',
+    marginTop: spacing.xs,
   },
   question: {
     color: colors.text,
