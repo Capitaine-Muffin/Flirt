@@ -33,15 +33,21 @@ export interface Product {
   displayPrice: string;
 }
 
-/** Prix indicatifs utilisés par le mock ; les stores font foi en prod. */
+/**
+ * Prix indicatifs utilisés par le mock ; les stores font foi en prod.
+ * Stratégie de LANCEMENT (volume et avis avant marge) : packs à 0,99 €
+ * pour l'achat impulsif, escalier 0,99 → 2,99 (sans pub) → 4,99 (tout).
+ * Les prix pourront remonter (packs à 1,99 €) depuis App Store Connect /
+ * Play Console une fois la base installée, sans mise à jour de l'app.
+ */
 export const MOCK_PRICES: Record<string, string> = {
-  flirt_premium_lifetime: '4,99 €',
-  flirt_bundle_tout: '9,99 €',
-  flirt_pack_coeur: '1,99 €',
-  flirt_pack_hot: '1,99 €',
-  flirt_pack_vraiment_hot: '1,99 €',
-  flirt_pack_dilemmes: '1,99 €',
-  flirt_pack_couple: '1,99 €',
+  flirt_premium_lifetime: '2,99 €',
+  flirt_bundle_tout: '4,99 €',
+  flirt_pack_coeur: '0,99 €',
+  flirt_pack_hot: '0,99 €',
+  flirt_pack_vraiment_hot: '0,99 €',
+  flirt_pack_dilemmes: '0,99 €',
+  flirt_pack_couple: '0,99 €',
 };
 
 export interface PurchaseResult {

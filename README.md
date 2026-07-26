@@ -26,15 +26,17 @@ entre soi et la conversation démarre toute seule.
 
 | Pack | Intensité | Accès |
 |---|---|---|
-| ❄️ Brise-glace (20 q.) | 🌶️ | Gratuit |
-| 😄 Fun & Léger (20 q.) | 🌶️ | Gratuit |
-| ⚖️ Tu préfères… (20 q.) | 🌶️ | Gratuit |
-| ✈️ Voyages & Rêves (15 q.) | 🌶️🌶️ | Gratuit |
-| 💖 Cœur à Cœur (25 q.) | 🌶️🌶️ | 1,99 € |
-| 🔥 Un peu Hot (25 q.) | 🌶️🌶️🌶️ | 1,99 € |
-| 😈 Vraiment Hot (20 q.) | 🌶️🌶️🌶️ | 1,99 € |
-| 🤔 Dilemmes & Débats (20 q.) | 🌶️🌶️ | 1,99 € |
-| 💍 Couple Confirmé (20 q.) | 🌶️🌶️ | 1,99 € |
+| ❄️ Brise-glace (30 q.) | 🌶️ | Gratuit |
+| 😄 Fun & Léger (30 q.) | 🌶️ | Gratuit |
+| ⚖️ Tu préfères… (30 q.) | 🌶️ | Gratuit |
+| ✈️ Voyages & Rêves (30 q.) | 🌶️🌶️ | Gratuit |
+| 💖 Cœur à Cœur (150 q.) | 🌶️🌶️ | 0,99 € |
+| 🔥 Un peu Hot (150 q.) | 🌶️🌶️🌶️ | 0,99 € |
+| 😈 Vraiment Hot (150 q.) | 🌶️🌶️🌶️ | 0,99 € |
+| 🤔 Dilemmes & Débats (150 q.) | 🌶️🌶️ | 0,99 € |
+| 💍 Couple Confirmé (150 q.) | 🌶️🌶️ | 0,99 € |
+
+Soit **870 questions** au total : 120 gratuites et 750 premium.
 
 Les questions vivent dans `src/data/questions.ts` — en ajouter un pack se
 fait en quelques lignes, sans toucher au reste du code.
@@ -44,11 +46,19 @@ fait en quelques lignes, sans toucher au reste du code.
 Pas d'abonnement récurrent : des **achats uniques**, faciles à accepter en
 caisse.
 
-| Produit | ID produit | Prix indicatif |
+| Produit | ID produit | Prix de lancement |
 |---|---|---|
-| ✨ Premium à vie (sans pub) | `flirt_premium_lifetime` | 4,99 € |
-| Pack de questions (×5) | `flirt_pack_*` | 1,99 € |
-| 💝 Bundle « Tout Flirt » | `flirt_bundle_tout` | 9,99 € |
+| Pack de questions (×5, 150 q. chacun) | `flirt_pack_*` | 0,99 € |
+| ✨ Premium à vie (sans pub) | `flirt_premium_lifetime` | 2,99 € |
+| 💝 Bundle « Tout Flirt » | `flirt_bundle_tout` | 4,99 € |
+
+**Stratégie de lancement** : prix volontairement bas (0,99 € = achat
+impulsif sous le seuil de réflexion) pour maximiser le volume et les avis
+au démarrage. L'escalier reste cohérent : 0,99 € le pack → 2,99 € sans
+pub → 4,99 € tout débloqué (valeur unitaire 7,94 €, ~37 % de remise).
+Une fois la base d'utilisateurs installée, les prix peuvent remonter
+(packs à 1,99 €) directement depuis App Store Connect / Play Console,
+sans mise à jour de l'app.
 
 **Règle d'or : aucune pub pendant une partie.** Une interstitielle au milieu
 d'une question tuerait le charme du date — c'est précisément l'argument de
