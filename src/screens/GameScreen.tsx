@@ -12,7 +12,7 @@ import React, { useMemo, useRef, useState } from 'react';
 import { Animated, Pressable, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Button from '../components/Button';
-import { PACKS } from '../data/questions';
+import { PACKS, isDuo, questionText } from '../data/questions';
 import { ScreenProps } from '../navigation';
 import { useApp } from '../state/AppContext';
 import { colors, font, radius, spacing } from '../theme';
@@ -135,11 +135,11 @@ export default function GameScreen({ navigation, route }: ScreenProps<'Game'>) {
 function buildDeck(packIds: string[]): GameQuestion[] {
   const questions = PACKS.filter((p) => packIds.includes(p.id)).flatMap((p) =>
     p.questions.map(
-      (text): GameQuestion => ({
-        text,
+      (q): GameQuestion => ({
+        text: questionText(q),
         packEmoji: p.emoji,
         packTitle: p.title,
-        kind: p.duo ? 'duo' : 'solo',
+        kind: isDuo(q) ? 'duo' : 'solo',
       }),
     ),
   );
