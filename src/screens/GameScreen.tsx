@@ -64,6 +64,15 @@ export default function GameScreen({ navigation, route }: ScreenProps<'Game'>) {
     });
   };
 
+  const goBack = () => {
+    if (index === 0) return;
+    Haptics.selectionAsync().catch(() => {});
+    const prev = index - 1;
+    // On restitue le tour tel qu'il était affiché sur cette question.
+    if (deck[prev].kind === 'solo') setSoloCount((n) => Math.max(0, n - 1));
+    setIndex(prev);
+  };
+
   const skip = () => {
     // La question passée est renvoyée en fin de pioche : on ne la perd pas.
     if (!current) return;
@@ -125,8 +134,20 @@ export default function GameScreen({ navigation, route }: ScreenProps<'Game'>) {
         </Animated.View>
       </Pressable>
 
-      <View style={styles.footer}>
-        <Button label="Passer cette question" variant="ghost" onPress={skip} />
+      <View style={styles.footerRow}>
+        <Button
+          label="← Précédente"
+          variant="ghost"
+          onPress={goBack}
+          disabled={index === 0}
+          style={styles.footerButton}
+        />
+        <Button
+          label="Passer cette question"
+          variant="ghost"
+          onPress={skip}
+          style={styles.footerButton}
+        />
       </View>
     </SafeAreaView>
   );
@@ -201,7 +222,8 @@ const styles = StyleSheet.create({
     fontSize: font.small,
     textAlign: 'center',
   },
-  footer: { padding: spacing.md },
+  footerRow: { flexDirection: 'row', padding: spacing.md, gap: spacing.sm },
+  footerButton: { flex: 1 },
   endContainer: { flex: 1, justifyContent: 'center', padding: spacing.lg },
   endEmoji: { fontSize: 64, textAlign: 'center' },
   endTitle: {
