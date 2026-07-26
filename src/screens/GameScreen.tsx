@@ -2,8 +2,8 @@
  * L'écran de jeu — le moment du date.
  *
  * Une question à la fois, en plein écran. Mécanique « Mix » : selon la
- * nature de la question, elle s'adresse à une personne (l'autre la lit à
- * voix haute) ou aux deux (« Tu préfères », débats). Zéro publicité ici :
+ * nature de la question, elle s'adresse à une personne en alternance ou
+ * aux deux (« Tu préfères », débats). Zéro publicité ici :
  * rien ne doit casser le rythme de la conversation. On peut passer une
  * question qui ne convient pas, et rejouer à l'infini.
  */
@@ -54,7 +54,6 @@ export default function GameScreen({ navigation, route }: ScreenProps<'Game'>) {
   const finished = index >= deck.length;
   const current = finished ? null : deck[index];
   const responder = names[soloCount % 2];
-  const asker = names[(soloCount + 1) % 2];
 
   const goNext = () => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light).catch(() => {});
@@ -117,15 +116,9 @@ export default function GameScreen({ navigation, route }: ScreenProps<'Game'>) {
             {current!.packEmoji} {current!.packTitle}
           </Text>
           {current!.kind === 'duo' ? (
-            <>
-              <Text style={[styles.turn, styles.turnDuo]}>Question pour vous deux</Text>
-              <Text style={styles.asker}>Répondez chacun à votre tour</Text>
-            </>
+            <Text style={[styles.turn, styles.turnDuo]}>Question pour vous deux</Text>
           ) : (
-            <>
-              <Text style={styles.turn}>Question pour {responder}</Text>
-              <Text style={styles.asker}>{asker}, lis-lui la question</Text>
-            </>
+            <Text style={styles.turn}>Question pour {responder}</Text>
           )}
           <Text style={styles.question}>{current!.text}</Text>
           <Text style={styles.tapHint}>Touchez la carte pour la question suivante</Text>
@@ -195,12 +188,6 @@ const styles = StyleSheet.create({
     marginTop: spacing.md,
   },
   turnDuo: { color: colors.gold },
-  asker: {
-    color: colors.textMuted,
-    fontSize: font.small,
-    textAlign: 'center',
-    marginTop: spacing.xs,
-  },
   question: {
     color: colors.text,
     fontSize: font.question,

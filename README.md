@@ -14,10 +14,9 @@ entre soi et la conversation démarre toute seule.
   date sans mode d'emploi.
 - **Une question à la fois**, en plein écran. Mécanique « Mix » : selon la
   nature de la question, elle s'adresse à une personne (« Question pour
-  Léa » — et l'autre la lit à voix haute) ou aux deux (« Tu préfères »,
-  débats : « Question pour vous deux »). L'alternance des tours ne compte
-  que les questions solo, pour rester équitable. On touche la carte pour
-  passer à la suivante.
+  Léa ») ou aux deux (« Tu préfères », débats : « Question pour vous
+  deux »). L'alternance des tours ne compte que les questions solo, pour
+  rester équitable. On touche la carte pour passer à la suivante.
 - **On peut passer** une question qui ne convient pas (elle revient en fin
   de pioche, elle n'est pas perdue).
 - **Des thèmes gradués en intensité** (🌶️ → 🌶️🌶️🌶️) : du brise-glace au
