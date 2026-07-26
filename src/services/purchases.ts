@@ -40,6 +40,22 @@ export interface Product {
  * Les prix pourront remonter (packs à 1,99 €) depuis App Store Connect /
  * Play Console une fois la base installée, sans mise à jour de l'app.
  */
+/**
+ * Prix en centimes, pour la logique d'affichage du bundle : on ne propose
+ * « Tout Flirt » que s'il reste avantageux par rapport à l'achat à
+ * l'unité de ce qui manque encore à l'utilisateur. En production, ces
+ * montants viennent du store (RevenueCat expose product.price).
+ */
+export const MOCK_PRICE_CENTS: Record<string, number> = {
+  flirt_premium_lifetime: 299,
+  flirt_bundle_tout: 499,
+  flirt_pack_coeur: 99,
+  flirt_pack_hot: 99,
+  flirt_pack_vraiment_hot: 99,
+  flirt_pack_dilemmes: 99,
+  flirt_pack_couple: 99,
+};
+
 export const MOCK_PRICES: Record<string, string> = {
   flirt_premium_lifetime: '2,99 €',
   flirt_bundle_tout: '4,99 €',

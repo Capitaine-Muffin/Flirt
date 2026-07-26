@@ -11,6 +11,7 @@ import Button from '../components/Button';
 import { PACKS, PREMIUM_PACKS, PRODUCT_IDS } from '../data/questions';
 import { ScreenProps } from '../navigation';
 import {
+  MOCK_PRICE_CENTS,
   getDisplayPrice,
   purchaseProduct,
   restorePurchases,
@@ -55,6 +56,16 @@ export default function ShopScreen(_props: ScreenProps<'Shop'>) {
   const allPacksOwned = PACKS.every((p) => isPackUnlocked(p.id));
   const bundleOwned = isPremium && allPacksOwned;
 
+  // Valeur à l'unité de ce qui manque encore : on ne propose le bundle
+  // que s'il reste une vraie économie (sinon on ferait payer à
+  // l'utilisateur des packs qu'il possède déjà).
+  const missingValueCents =
+    PREMIUM_PACKS.filter((p) => !isPackUnlocked(p.id)).reduce(
+      (sum, p) => sum + (MOCK_PRICE_CENTS[p.productId!] ?? 0),
+      0,
+    ) + (isPremium ? 0 : MOCK_PRICE_CENTS[PRODUCT_IDS.PREMIUM_LIFETIME]);
+  const bundleWorthIt = missingValueCents > MOCK_PRICE_CENTS[PRODUCT_IDS.BUNDLE_ALL];
+
   return (
     <SafeAreaView style={styles.safe} edges={['bottom']}>
       <ScrollView contentContainerStyle={styles.content}>
@@ -78,23 +89,30 @@ export default function ShopScreen(_props: ScreenProps<'Shop'>) {
           )}
         </View>
 
-        {/* Bundle */}
-        <View style={[styles.offer, styles.bundleOffer]}>
-          <Text style={styles.offerTitle}>💝 Tout Flirt</Text>
-          <Text style={styles.offerText}>
-            Premium à vie + les {PREMIUM_PACKS.length} packs de questions.
-            La meilleure offre.
-          </Text>
-          {bundleOwned ? (
+        {/* Bundle — masqué dès qu'il n'est plus avantageux pour l'utilisateur */}
+        {bundleOwned ? (
+          <View style={[styles.offer, styles.bundleOffer]}>
+            <Text style={styles.offerTitle}>💝 Tout Flirt</Text>
             <Text style={styles.owned}>Tout est débloqué ! 🎉</Text>
-          ) : (
+          </View>
+        ) : bundleWorthIt ? (
+          <View style={[styles.offer, styles.bundleOffer]}>
+            <Text style={styles.offerTitle}>💝 Tout Flirt</Text>
+            <Text style={styles.offerText}>
+              Premium à vie + les {PREMIUM_PACKS.length} packs de questions.
+              La meilleure offre.
+            </Text>
             <Button
               label={`Tout débloquer · ${getDisplayPrice(PRODUCT_IDS.BUNDLE_ALL)}`}
               loading={busyProduct === PRODUCT_IDS.BUNDLE_ALL}
               onPress={() => buy(PRODUCT_IDS.BUNDLE_ALL)}
             />
-          )}
-        </View>
+          </View>
+        ) : (
+          <Text style={styles.bundleHint}>
+            Vu vos achats, il est plus avantageux de compléter à l'unité 👇
+          </Text>
+        )}
 
         {/* Packs à l'unité */}
         <Text style={styles.sectionTitle}>Packs de questions</Text>
@@ -156,6 +174,12 @@ const styles = StyleSheet.create({
     marginVertical: spacing.sm,
   },
   owned: { color: colors.success, fontSize: font.body, fontWeight: '700' },
+  bundleHint: {
+    color: colors.textMuted,
+    fontSize: font.small,
+    textAlign: 'center',
+    marginBottom: spacing.md,
+  },
   sectionTitle: {
     color: colors.text,
     fontSize: font.subtitle,
