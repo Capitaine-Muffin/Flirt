@@ -146,7 +146,7 @@ export default function GameScreen({ navigation, route }: ScreenProps<'Game'>) {
             <Text style={styles.endDot}>.</Text>
           </Text>
           <Text style={styles.endText}>
-            Le temps d'une gorgée, d'un regard…{'\n'}et on repart ?
+            Un chapitre se referme,{'\n'}un autre s'ouvre déjà.
           </Text>
           <Button label="Chapitre suivant" onPress={nextRound} style={styles.endButton} />
           <Button
