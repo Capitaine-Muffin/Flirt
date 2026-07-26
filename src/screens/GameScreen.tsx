@@ -26,6 +26,13 @@ interface GameQuestion {
   kind: 'solo' | 'duo';
 }
 
+/**
+ * Une partie se joue en manches courtes : 15 questions, puis une pause
+ * (« Encore une manche ? »). Les manches suivantes piochent dans les
+ * questions pas encore vues — aucune répétition avant épuisement.
+ */
+const ROUND_SIZE = 15;
+
 function shuffle<T>(items: T[]): T[] {
   const arr = [...items];
   for (let i = arr.length - 1; i > 0; i--) {
@@ -44,6 +51,9 @@ export default function GameScreen({ navigation, route }: ScreenProps<'Game'>) {
   // Nombre de questions solo déjà jouées : l'alternance des tours ne
   // compte que celles-là, pour rester équitable malgré les questions duo.
   const [soloCount, setSoloCount] = useState(0);
+  const [round, setRound] = useState(1);
+  const [answeredInRound, setAnsweredInRound] = useState(0);
+  const [betweenRounds, setBetweenRounds] = useState(false);
   const fade = useRef(new Animated.Value(1)).current;
 
   const names = useMemo(() => {
@@ -55,10 +65,15 @@ export default function GameScreen({ navigation, route }: ScreenProps<'Game'>) {
   const finished = index >= deck.length;
   const current = finished ? null : deck[index];
   const responder = names[soloCount % 2];
+  // Taille réelle de la manche en cours (la dernière peut être plus courte).
+  const roundTotal = Math.min(ROUND_SIZE, answeredInRound + (deck.length - index));
 
   const goNext = () => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light).catch(() => {});
     if (current?.kind === 'solo') setSoloCount((n) => n + 1);
+    const answered = answeredInRound + 1;
+    setAnsweredInRound(answered);
+    if (answered >= ROUND_SIZE) setBetweenRounds(true);
     Animated.timing(fade, { toValue: 0, duration: 140, useNativeDriver: true }).start(() => {
       setIndex((i) => i + 1);
       Animated.timing(fade, { toValue: 1, duration: 180, useNativeDriver: true }).start();
@@ -66,12 +81,19 @@ export default function GameScreen({ navigation, route }: ScreenProps<'Game'>) {
   };
 
   const goBack = () => {
-    if (index === 0) return;
+    if (index === 0 || answeredInRound === 0) return;
     Haptics.selectionAsync().catch(() => {});
     const prev = index - 1;
     // On restitue le tour tel qu'il était affiché sur cette question.
     if (deck[prev].kind === 'solo') setSoloCount((n) => Math.max(0, n - 1));
+    setAnsweredInRound((n) => Math.max(0, n - 1));
     setIndex(prev);
+  };
+
+  const nextRound = () => {
+    setAnsweredInRound(0);
+    setRound((r) => r + 1);
+    setBetweenRounds(false);
   };
 
   const skip = () => {
@@ -85,6 +107,9 @@ export default function GameScreen({ navigation, route }: ScreenProps<'Game'>) {
     setDeck(buildDeck(packIds));
     setIndex(0);
     setSoloCount(0);
+    setRound(1);
+    setAnsweredInRound(0);
+    setBetweenRounds(false);
   };
 
   if (finished) {
@@ -110,15 +135,37 @@ export default function GameScreen({ navigation, route }: ScreenProps<'Game'>) {
     );
   }
 
+  if (betweenRounds) {
+    return (
+      <SafeAreaView style={styles.safe}>
+        <View style={styles.endContainer}>
+          <Text style={styles.endEmoji}>💞</Text>
+          <Text style={styles.endTitle}>Manche terminée !</Text>
+          <Text style={styles.endText}>
+            Le temps d'une gorgée, d'un regard…{'\n'}et on repart ?
+          </Text>
+          <Button label="Encore une manche 💘" onPress={nextRound} style={styles.endButton} />
+          <Button
+            label="On s'arrête là"
+            variant="ghost"
+            onPress={() => navigation.popToTop()}
+            style={styles.endButton}
+          />
+        </View>
+        <AdBanner compact />
+      </SafeAreaView>
+    );
+  }
+
   return (
     <SafeAreaView style={styles.safe}>
       <View style={styles.progressTrack}>
         <View
-          style={[styles.progressFill, { width: `${((index + 1) / deck.length) * 100}%` }]}
+          style={[styles.progressFill, { width: `${((answeredInRound + 1) / roundTotal) * 100}%` }]}
         />
       </View>
       <Text style={styles.progressLabel}>
-        Question {index + 1} / {deck.length}
+        Manche {round} · {answeredInRound + 1} / {roundTotal}
       </Text>
 
       <Pressable style={styles.cardArea} onPress={goNext}>
@@ -141,7 +188,7 @@ export default function GameScreen({ navigation, route }: ScreenProps<'Game'>) {
           label="← Précédente"
           variant="ghost"
           onPress={goBack}
-          disabled={index === 0}
+          disabled={index === 0 || answeredInRound === 0}
           style={styles.footerButton}
         />
         <Button
