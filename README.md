@@ -60,10 +60,11 @@ Une fois la base d'utilisateurs installée, les prix peuvent remonter
 (packs à 1,99 €) directement depuis App Store Connect / Play Console,
 sans mise à jour de l'app.
 
-**Règle d'or : aucune pub pendant une partie.** Une interstitielle au milieu
-d'une question tuerait le charme du date — c'est précisément l'argument de
-vente du Premium. Les bannières n'apparaissent que sur les écrans de menu
-(accueil, boutique), et disparaissent définitivement avec le Premium.
+**Règle d'or : la pub ne coupe jamais rien.** Aucun interstitiel, aucune
+vidéo, aucun plein écran — l'app doit rester chic même en version
+gratuite. Uniquement des bannières discrètes : accueil, boutique, et une
+bannière fine sous la carte pendant le jeu. Toutes disparaissent
+définitivement avec le Premium (2,99 €), qui reste l'argument de vente.
 
 ## 🛠️ Stack technique
 
