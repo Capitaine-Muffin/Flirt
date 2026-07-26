@@ -33,6 +33,16 @@ interface GameQuestion {
  */
 const ROUND_SIZE = 15;
 
+const ORDINALS = [
+  'premier', 'deuxième', 'troisième', 'quatrième', 'cinquième',
+  'sixième', 'septième', 'huitième', 'neuvième', 'dixième',
+];
+
+/** « Fin du troisième chapitre » — repli chiffré au-delà du dixième. */
+function chapterTitle(n: number): string {
+  return n <= ORDINALS.length ? `Fin du ${ORDINALS[n - 1]} chapitre` : `Fin du chapitre ${n}`;
+}
+
 function shuffle<T>(items: T[]): T[] {
   const arr = [...items];
   for (let i = arr.length - 1; i > 0; i--) {
@@ -142,7 +152,7 @@ export default function GameScreen({ navigation, route }: ScreenProps<'Game'>) {
       <SafeAreaView style={styles.safe}>
         <View style={styles.endContainer}>
           <Text style={[styles.endTitle, styles.endTitlePause]}>
-            Fin du chapitre
+            {chapterTitle(round)}
             <Text style={styles.endDot}>.</Text>
           </Text>
           <Button label="Chapitre suivant" onPress={nextRound} style={styles.endButton} />
