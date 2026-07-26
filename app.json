@@ -1,17 +1,24 @@
 {
   "expo": {
-    "name": "flirt-tmp",
-    "slug": "flirt-tmp",
+    "name": "Flirt",
+    "slug": "flirt",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
-    "userInterfaceStyle": "light",
+    "userInterfaceStyle": "dark",
+    "backgroundColor": "#160B1A",
+    "splash": {
+      "backgroundColor": "#160B1A",
+      "resizeMode": "contain"
+    },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": false,
+      "bundleIdentifier": "com.flirtgame.app"
     },
     "android": {
+      "package": "com.flirtgame.app",
       "adaptiveIcon": {
-        "backgroundColor": "#E6F4FE",
+        "backgroundColor": "#160B1A",
         "foregroundImage": "./assets/android-icon-foreground.png",
         "backgroundImage": "./assets/android-icon-background.png",
         "monochromeImage": "./assets/android-icon-monochrome.png"
