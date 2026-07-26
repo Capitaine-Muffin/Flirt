@@ -147,7 +147,7 @@ export default function GameScreen({ navigation, route }: ScreenProps<'Game'>) {
           </Text>
           <Button label="Chapitre suivant" onPress={nextRound} style={styles.endButton} />
           <Button
-            label="On s'arrête là"
+            label="Retour à l'accueil"
             variant="ghost"
             onPress={() => navigation.popToTop()}
             style={styles.endButton}
