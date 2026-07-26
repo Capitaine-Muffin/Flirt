@@ -32,6 +32,7 @@ entre soi et la conversation démarre toute seule.
 | ✈️ Voyages & Rêves (15 q.) | 🌶️🌶️ | Gratuit |
 | 💖 Cœur à Cœur (25 q.) | 🌶️🌶️ | 1,99 € |
 | 🔥 Un peu Hot (25 q.) | 🌶️🌶️🌶️ | 1,99 € |
+| 😈 Vraiment Hot (20 q.) | 🌶️🌶️🌶️ | 1,99 € |
 | 🤔 Dilemmes & Débats (20 q.) | 🌶️🌶️ | 1,99 € |
 | 💍 Couple Confirmé (20 q.) | 🌶️🌶️ | 1,99 € |
 
@@ -46,7 +47,7 @@ caisse.
 | Produit | ID produit | Prix indicatif |
 |---|---|---|
 | ✨ Premium à vie (sans pub) | `flirt_premium_lifetime` | 4,99 € |
-| Pack de questions (×4) | `flirt_pack_*` | 1,99 € |
+| Pack de questions (×5) | `flirt_pack_*` | 1,99 € |
 | 💝 Bundle « Tout Flirt » | `flirt_bundle_tout` | 9,99 € |
 
 **Règle d'or : aucune pub pendant une partie.** Une interstitielle au milieu

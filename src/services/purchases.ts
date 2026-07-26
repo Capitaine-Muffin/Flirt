@@ -39,6 +39,7 @@ export const MOCK_PRICES: Record<string, string> = {
   flirt_bundle_tout: '9,99 €',
   flirt_pack_coeur: '1,99 €',
   flirt_pack_hot: '1,99 €',
+  flirt_pack_vraiment_hot: '1,99 €',
   flirt_pack_dilemmes: '1,99 €',
   flirt_pack_couple: '1,99 €',
 };
