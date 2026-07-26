@@ -17,11 +17,11 @@ entre soi et la conversation démarre toute seule.
   Léa ») ou aux deux (« Tu préfères », débats : « Question pour vous
   deux »). L'alternance des tours ne compte que les questions solo, pour
   rester équitable. On touche la carte pour passer à la suivante.
-- **Des manches de 15 questions** : à la fin de chaque manche, une pause
-  (« Encore une manche ? ») crée une respiration dans le date et un
-  sentiment d'accomplissement. Les manches suivantes piochent dans les
-  questions pas encore vues — aucune répétition avant d'avoir épuisé la
-  sélection.
+- **Des chapitres de 15 questions** : à la fin de chaque chapitre, une
+  pause sobre (« Fin du chapitre. » — le point rosé de la marque, pas de
+  cœurs) crée une respiration dans le date et un sentiment
+  d'accomplissement. Les chapitres suivants piochent dans les questions
+  pas encore vues — aucune répétition avant d'avoir épuisé la sélection.
 - **On peut passer** une question qui ne convient pas (elle revient en fin
   de pioche, elle n'est pas perdue).
 - **Des thèmes gradués en intensité** (🌶️ → 🌶️🌶️🌶️) : du brise-glace au

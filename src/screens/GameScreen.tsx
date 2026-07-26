@@ -27,8 +27,8 @@ interface GameQuestion {
 }
 
 /**
- * Une partie se joue en manches courtes : 15 questions, puis une pause
- * (« Encore une manche ? »). Les manches suivantes piochent dans les
+ * Une partie se joue en chapitres courts : 15 questions, puis une pause
+ * (« Chapitre suivant ? »). Les chapitres suivants piochent dans les
  * questions pas encore vues — aucune répétition avant épuisement.
  */
 const ROUND_SIZE = 15;
@@ -116,8 +116,10 @@ export default function GameScreen({ navigation, route }: ScreenProps<'Game'>) {
     return (
       <SafeAreaView style={styles.safe}>
         <View style={styles.endContainer}>
-          <Text style={styles.endEmoji}>💞</Text>
-          <Text style={styles.endTitle}>Vous avez fait le tour !</Text>
+          <Text style={styles.endTitle}>
+            Vous avez fait le tour
+            <Text style={styles.endDot}>.</Text>
+          </Text>
           <Text style={styles.endText}>
             {names[0]} & {names[1]}, vous vous connaissez déjà beaucoup mieux.
             {'\n'}La suite se passe sans téléphone…
@@ -139,12 +141,14 @@ export default function GameScreen({ navigation, route }: ScreenProps<'Game'>) {
     return (
       <SafeAreaView style={styles.safe}>
         <View style={styles.endContainer}>
-          <Text style={styles.endEmoji}>💞</Text>
-          <Text style={styles.endTitle}>Manche terminée !</Text>
+          <Text style={styles.endTitle}>
+            Fin du chapitre
+            <Text style={styles.endDot}>.</Text>
+          </Text>
           <Text style={styles.endText}>
             Le temps d'une gorgée, d'un regard…{'\n'}et on repart ?
           </Text>
-          <Button label="Encore une manche 💘" onPress={nextRound} style={styles.endButton} />
+          <Button label="Chapitre suivant" onPress={nextRound} style={styles.endButton} />
           <Button
             label="On s'arrête là"
             variant="ghost"
@@ -165,7 +169,7 @@ export default function GameScreen({ navigation, route }: ScreenProps<'Game'>) {
         />
       </View>
       <Text style={styles.progressLabel}>
-        Manche {round} · {answeredInRound + 1} / {roundTotal}
+        Chapitre {round} · {answeredInRound + 1} / {roundTotal}
       </Text>
 
       <Pressable style={styles.cardArea} onPress={goNext}>
@@ -275,14 +279,13 @@ const styles = StyleSheet.create({
   footerRow: { flexDirection: 'row', padding: spacing.md, gap: spacing.sm },
   footerButton: { flex: 1 },
   endContainer: { flex: 1, justifyContent: 'center', padding: spacing.lg },
-  endEmoji: { fontSize: 64, textAlign: 'center' },
   endTitle: {
     color: colors.text,
     fontSize: font.title,
     fontWeight: '900',
     textAlign: 'center',
-    marginTop: spacing.md,
   },
+  endDot: { color: colors.primary },
   endText: {
     color: colors.textMuted,
     fontSize: font.body,
