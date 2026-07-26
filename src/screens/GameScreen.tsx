@@ -141,12 +141,9 @@ export default function GameScreen({ navigation, route }: ScreenProps<'Game'>) {
     return (
       <SafeAreaView style={styles.safe}>
         <View style={styles.endContainer}>
-          <Text style={styles.endTitle}>
+          <Text style={[styles.endTitle, styles.endTitlePause]}>
             Fin du chapitre
             <Text style={styles.endDot}>.</Text>
-          </Text>
-          <Text style={styles.endText}>
-            Un chapitre se referme,{'\n'}un autre s'ouvre déjà.
           </Text>
           <Button label="Chapitre suivant" onPress={nextRound} style={styles.endButton} />
           <Button
@@ -286,6 +283,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   endDot: { color: colors.primary },
+  endTitlePause: { marginBottom: spacing.lg },
   endText: {
     color: colors.textMuted,
     fontSize: font.body,
