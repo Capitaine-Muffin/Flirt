@@ -2,7 +2,8 @@
 
 ## [Unreleased]
 
-(rien pour l'instant)
+- La variante « sans prénom » perd son s : dossier renommé
+  `docs/sansprenom/` (l'URL change), textes corrigés.
 
 ## [0.4.0] — 2026-07-31
 
