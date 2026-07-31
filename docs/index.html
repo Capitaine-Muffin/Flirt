@@ -3,6 +3,10 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#160B1A">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
 <title>Flirt — démo jouable</title>
 <style>
   /*
@@ -283,6 +287,7 @@
     <div class="home-actions">
       <button class="primary" onclick="show('setup')">Commencer une partie</button>
       <button onclick="openShop('home')">Boutique · Premium &amp; Packs</button>
+      <button id="installBtn" hidden onclick="installApp()">📲 Installer sur l'écran d'accueil</button>
       <div class="ad" id="homeAd">Publicité — bannière discrète ici dans la version gratuite, jamais pendant la partie.</div>
     </div>
   </section>
@@ -1507,6 +1512,28 @@ function endGame() {
 }
 
 renderPacks();
+
+/* ============ Installation sur l'écran d'accueil (PWA) ============
+   Chrome/Android ne propose l'installation que si la page a un
+   manifeste et un service worker. On relaie sa proposition par un
+   vrai bouton sur l'accueil, plus visible pour les testeurs. */
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => navigator.serviceWorker.register('sw.js'));
+}
+let installPrompt = null;
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault();
+  installPrompt = e;
+  document.getElementById('installBtn').hidden = false;
+});
+function installApp() {
+  if (!installPrompt) return;
+  installPrompt.prompt();
+  installPrompt.userChoice.then(() => {
+    installPrompt = null;
+    document.getElementById('installBtn').hidden = true;
+  });
+}
 </script>
 </body>
 </html>

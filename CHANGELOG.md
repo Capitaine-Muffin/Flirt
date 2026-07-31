@@ -4,6 +4,11 @@
 
 (rien pour l'instant)
 
+## [0.1.2] — 2026-07-31
+
+- La démo web devient installable sur téléphone (PWA) : manifeste, service
+  worker et bouton « Installer sur l'écran d'accueil » sur Android.
+
 ## [0.1.1] — 2026-07-31
 
 - Chapitres de 5 questions au lieu de 15.
