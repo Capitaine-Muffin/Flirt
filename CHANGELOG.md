@@ -4,6 +4,12 @@
 
 (rien pour l'instant)
 
+## [0.5.4] — 2026-07-31
+
+- L'app installée se met vraiment à jour au lancement : le service worker
+  revalide chaque fichier auprès du serveur au lieu de resservir la copie
+  locale « encore valable ».
+
 ## [0.5.3] — 2026-07-31
 
 - Sortie technique sans changement : sert à vérifier que l'app installée
