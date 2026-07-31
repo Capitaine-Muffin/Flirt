@@ -312,7 +312,7 @@
 </head>
 <body>
 <div id="phone">
-  <div class="demo-note">Démo web · achats simulés · v0.5.0</div>
+  <div class="demo-note">Démo web · achats simulés · v0.5.1</div>
 
   <!-- Accueil -->
   <section class="screen active" id="home">
@@ -416,7 +416,7 @@
   <section class="screen" id="feedback">
     <button class="ghost back-link" onclick="show('home')">← Accueil</button>
     <h2>Ton avis compte</h2>
-    <p class="fb-q">Réponds en deux taps, ajoute un mot si tu veux : le bouton prépare un e-mail tout fait pour le développeur.</p>
+    <p class="fb-q">Réponds en deux taps, ajoute un mot si tu veux : ton retour part directement au développeur.</p>
     <div class="fb-q">Tu préfères jouer…</div>
     <div class="fb-row">
       <button class="chip" id="fbNamesOn" onclick="fbPick('names', true)">avec prénoms</button>
@@ -427,7 +427,7 @@
       <button class="chip" id="fbChapOff" onclick="fbPick('chapters', false)">sans chapitres</button>
     </div>
     <textarea id="fbText" placeholder="Un truc à dire ? Bug, idée, question préférée…"></textarea>
-    <button class="primary" onclick="sendFeedback()">Envoyer par e-mail</button>
+    <button class="primary" id="fbSend" onclick="sendFeedback()">Envoyer</button>
   </section>
 
   <!-- Fin -->
@@ -1392,7 +1392,8 @@ function renderOpts() {
 }
 
 /* ============ Retour des testeurs ============
-   Part par e-mail prérempli (mailto:) : aucun serveur, marche partout. */
+   Envoi silencieux via Web3Forms : la réponse arrive par e-mail au
+   développeur, le testeur ne quitte jamais la page. */
 const fb = { names: null, chapters: null };
 function fbPick(key, val) {
   fb[key] = fb[key] === val ? null : val;
@@ -1401,21 +1402,34 @@ function fbPick(key, val) {
   document.getElementById(on).classList.toggle('selected', fb[key] === true);
   document.getElementById(off).classList.toggle('selected', fb[key] === false);
 }
-function sendFeedback() {
+async function sendFeedback() {
+  const btn = document.getElementById('fbSend');
+  btn.disabled = true;
+  btn.textContent = 'Envoi…';
   const version = (document.querySelector('.demo-note').textContent.match(/v[\d.]+/) || ['?'])[0];
   const pref = (v) => v === null ? '(pas répondu)' : v ? 'avec' : 'sans';
-  const body = [
-    'Retour Flirt (démo ' + version + ')',
-    '',
-    'Préférence prénoms : ' + pref(fb.names),
-    'Préférence chapitres : ' + pref(fb.chapters),
-    'Réglages du moment : prénoms ' + (opts.names ? 'activés' : 'coupés') +
-      ', chapitres ' + (opts.chapters ? 'activés' : 'coupés'),
-    '',
-    document.getElementById('fbText').value,
-  ].join('\n');
-  location.href = 'mailto:raphael.caloy@gmail.com?subject=' +
-    encodeURIComponent('Retour Flirt') + '&body=' + encodeURIComponent(body);
+  try {
+    const res = await fetch('https://api.web3forms.com/submit', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+      body: JSON.stringify({
+        access_key: 'da6ff3d6-c948-4329-af99-eaa79a468718',
+        subject: 'Retour Flirt (démo ' + version + ')',
+        from_name: 'Démo Flirt',
+        preference_prenoms: pref(fb.names),
+        preference_chapitres: pref(fb.chapters),
+        reglages_du_moment: 'prénoms ' + (opts.names ? 'activés' : 'coupés') +
+          ', chapitres ' + (opts.chapters ? 'activés' : 'coupés'),
+        message: document.getElementById('fbText').value || '(vide)',
+      }),
+    });
+    if (!(await res.json()).success) throw new Error('refus');
+    btn.textContent = 'Merci pour ton retour ! ❤️';
+    document.getElementById('fbText').value = '';
+  } catch (e) {
+    btn.disabled = false;
+    btn.textContent = 'Échec de l\'envoi — réessaie';
+  }
 }
 
 function show(id) {

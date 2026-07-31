@@ -4,6 +4,12 @@
 
 (rien pour l'instant)
 
+## [0.5.1] — 2026-07-31
+
+- Le retour testeur s'envoie silencieusement (service Web3Forms) : plus
+  d'application e-mail qui s'ouvre — un tap sur « Envoyer », un merci, et
+  la réponse arrive par e-mail au développeur.
+
 ## [0.5.0] — 2026-07-31
 
 - La démo web devient LA version de test : un écran « Réglages » avec deux
