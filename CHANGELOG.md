@@ -4,6 +4,12 @@
 
 (rien pour l'instant)
 
+## [0.2.0] — 2026-07-31
+
+- Nouveau mode jouable en test dans la démo web : « sans chapitres »
+  (`docs/sanschapitre/`) — les cartes défilent en continu, sans pause ni
+  compteur, jusqu'à épuisement des questions.
+
 ## [0.1.3] — 2026-07-31
 
 - Démo web : sur iPhone, affichage de la marche à suivre pour installer le
