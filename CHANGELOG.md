@@ -2,7 +2,9 @@
 
 ## [Unreleased]
 
-(rien pour l'instant)
+- Démo web : sur iPhone, affichage de la marche à suivre pour installer le
+  jeu (Partager → « Sur l'écran d'accueil »), Safari n'ayant pas de popup
+  d'installation.
 
 ## [0.1.2] — 2026-07-31
 
