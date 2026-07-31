@@ -4,6 +4,17 @@
 
 (rien pour l'instant)
 
+## [0.5.0] — 2026-07-31
+
+- La démo web devient LA version de test : un écran « Réglages » avec deux
+  interrupteurs (Prénoms & tours de parole, Chapitres), mémorisés sur le
+  téléphone — les 4 combinaisons dans une seule page.
+- Écran « Donner ton avis » : préférences en deux taps + texte libre,
+  envoyé par e-mail prérempli au développeur. Accessible depuis l'accueil
+  et la fin de partie.
+- Les pages variantes `sanschapitre/` et `sansprenom/` sont supprimées
+  (remplacées par les réglages) — leurs URL ne répondent plus.
+
 ## [0.4.1] — 2026-07-31
 
 - La variante « sans prénom » perd aussi les chapitres : les cartes

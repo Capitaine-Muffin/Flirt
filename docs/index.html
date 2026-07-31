@@ -148,6 +148,37 @@
   .mode .title { font-weight: 700; font-size: 15px; }
   .mode .desc { color: var(--muted); font-size: 12.5px; margin-top: 2px; }
   .mode .reco { color: var(--gold); font-size: 10.5px; letter-spacing: 1px; text-transform: uppercase; font-weight: 700; margin-left: 6px; }
+  .mode .info { flex: 1; display: flex; flex-direction: column; }
+  .mode .tick { color: var(--gold); font-size: 20px; font-weight: 900; visibility: hidden; }
+  .mode.selected .tick { visibility: visible; }
+
+  /* ---------- Retour testeurs ---------- */
+  #feedback { overflow-y: auto; gap: 10px; }
+  .fb-q { color: var(--muted); font-size: 14px; margin-top: 6px; }
+  .fb-row { display: flex; gap: 8px; }
+  .chip {
+    flex: 1;
+    background: var(--surface);
+    border: 2px solid transparent;
+    border-radius: 999px;
+    padding: 12px;
+    font-weight: 600;
+    font-size: 14px;
+  }
+  .chip.selected { border-color: var(--gold); }
+  #fbText {
+    background: var(--surface);
+    border: 1px solid var(--surface-light);
+    border-radius: 14px;
+    color: var(--text);
+    font-family: var(--body);
+    font-size: 15px;
+    padding: 14px 16px;
+    min-height: 110px;
+    resize: vertical;
+  }
+  #fbText::placeholder { color: var(--muted); }
+  #fbText:focus { outline: none; border-color: var(--primary); }
 
   #packs { display: flex; flex-direction: column; gap: 8px; overflow-y: auto; }
   .pack {
@@ -281,7 +312,7 @@
 </head>
 <body>
 <div id="phone">
-  <div class="demo-note">Démo web · achats simulés · v0.4.1</div>
+  <div class="demo-note">Démo web · achats simulés · v0.5.0</div>
 
   <!-- Accueil -->
   <section class="screen active" id="home">
@@ -292,6 +323,7 @@
     <div class="home-actions">
       <button class="primary" onclick="show('setup')">Commencer une partie</button>
       <button onclick="openShop('home')">Boutique · Premium &amp; Packs</button>
+      <button class="ghost" onclick="show('feedback')">💬 Donner ton avis</button>
       <button id="installBtn" hidden onclick="installApp()">📲 Installer sur l'écran d'accueil</button>
       <div class="ad" id="iosHint" hidden>📲 Pour installer le jeu : touche le bouton Partager <span aria-hidden="true">⬆️</span> de Safari, puis « Sur l'écran d'accueil ».</div>
       <div class="ad" id="homeAd">Publicité — bannière discrète ici dans la version gratuite, jamais pendant la partie.</div>
@@ -320,11 +352,28 @@
   <!-- Préparation -->
   <section class="screen" id="setup">
     <button class="ghost back-link" onclick="show('home')">← Accueil</button>
+    <h2>Réglages</h2>
+    <div class="modes">
+      <button class="mode selected" id="optNames" onclick="toggleOpt('names')">
+        <span class="emoji">🗣️</span>
+        <span class="info"><span class="title">Prénoms &amp; tours de parole</span>
+        <span class="desc">Questions adressées, chacun son tour</span></span>
+        <span class="tick">✓</span>
+      </button>
+      <button class="mode selected" id="optChapters" onclick="toggleOpt('chapters')">
+        <span class="emoji">📖</span>
+        <span class="info"><span class="title">Chapitres</span>
+        <span class="desc">Une pause toutes les 5 questions</span></span>
+        <span class="tick">✓</span>
+      </button>
+    </div>
+    <div id="namesBlock">
     <h2>Qui joue ce soir ?</h2>
     <div class="names">
       <input id="nameA" placeholder="Prénom 1" maxlength="20" autocomplete="off">
       <span>❤️</span>
       <input id="nameB" placeholder="Prénom 2" maxlength="20" autocomplete="off">
+    </div>
     </div>
     <h2>Choisissez vos thèmes</h2>
     <div id="packs"></div>
@@ -363,12 +412,31 @@
     <div class="ad-compact" id="pauseAd">Publicité</div>
   </section>
 
+  <!-- Retour testeurs -->
+  <section class="screen" id="feedback">
+    <button class="ghost back-link" onclick="show('home')">← Accueil</button>
+    <h2>Ton avis compte</h2>
+    <p class="fb-q">Réponds en deux taps, ajoute un mot si tu veux : le bouton prépare un e-mail tout fait pour le développeur.</p>
+    <div class="fb-q">Tu préfères jouer…</div>
+    <div class="fb-row">
+      <button class="chip" id="fbNamesOn" onclick="fbPick('names', true)">avec prénoms</button>
+      <button class="chip" id="fbNamesOff" onclick="fbPick('names', false)">sans prénoms</button>
+    </div>
+    <div class="fb-row">
+      <button class="chip" id="fbChapOn" onclick="fbPick('chapters', true)">avec chapitres</button>
+      <button class="chip" id="fbChapOff" onclick="fbPick('chapters', false)">sans chapitres</button>
+    </div>
+    <textarea id="fbText" placeholder="Un truc à dire ? Bug, idée, question préférée…"></textarea>
+    <button class="primary" onclick="sendFeedback()">Envoyer par e-mail</button>
+  </section>
+
   <!-- Fin -->
   <section class="screen" id="end">
     <h2>Vous avez fait le tour<span class="dot">.</span></h2>
     <p id="endText"></p>
     <button class="primary" onclick="startGame()">Rejouer avec les mêmes thèmes</button>
     <button class="ghost" onclick="show('home')">Retour à l'accueil</button>
+    <button class="ghost" onclick="show('feedback')">💬 Donner ton avis</button>
     <div class="ad-compact" id="endAd">Publicité</div>
   </section>
 
@@ -1307,6 +1375,49 @@ const selected = new Set(PACKS.filter(p => !p.premium).map(p => p.id));
 let deck = [], index = 0, soloCount = 0, names = ['Joueur 1', 'Joueur 2'];
 let round = 1, answeredInRound = 0;
 
+/* ============ Réglages de partie ============
+   Deux interrupteurs testés auprès des joueurs : prénoms et chapitres.
+   Mémorisés dans le navigateur, pour que chacun garde sa formule. */
+const opts = { names: true, chapters: true };
+try { Object.assign(opts, JSON.parse(localStorage.getItem('flirt-opts') || '{}')); } catch (e) {}
+function toggleOpt(key) {
+  opts[key] = !opts[key];
+  try { localStorage.setItem('flirt-opts', JSON.stringify(opts)); } catch (e) {}
+  renderOpts();
+}
+function renderOpts() {
+  document.getElementById('optNames').classList.toggle('selected', opts.names);
+  document.getElementById('optChapters').classList.toggle('selected', opts.chapters);
+  document.getElementById('namesBlock').style.display = opts.names ? '' : 'none';
+}
+
+/* ============ Retour des testeurs ============
+   Part par e-mail prérempli (mailto:) : aucun serveur, marche partout. */
+const fb = { names: null, chapters: null };
+function fbPick(key, val) {
+  fb[key] = fb[key] === val ? null : val;
+  const on = key === 'names' ? 'fbNamesOn' : 'fbChapOn';
+  const off = key === 'names' ? 'fbNamesOff' : 'fbChapOff';
+  document.getElementById(on).classList.toggle('selected', fb[key] === true);
+  document.getElementById(off).classList.toggle('selected', fb[key] === false);
+}
+function sendFeedback() {
+  const version = (document.querySelector('.demo-note').textContent.match(/v[\d.]+/) || ['?'])[0];
+  const pref = (v) => v === null ? '(pas répondu)' : v ? 'avec' : 'sans';
+  const body = [
+    'Retour Flirt (démo ' + version + ')',
+    '',
+    'Préférence prénoms : ' + pref(fb.names),
+    'Préférence chapitres : ' + pref(fb.chapters),
+    'Réglages du moment : prénoms ' + (opts.names ? 'activés' : 'coupés') +
+      ', chapitres ' + (opts.chapters ? 'activés' : 'coupés'),
+    '',
+    document.getElementById('fbText').value,
+  ].join('\n');
+  location.href = 'mailto:raphael.caloy@gmail.com?subject=' +
+    encodeURIComponent('Retour Flirt') + '&body=' + encodeURIComponent(body);
+}
+
 function show(id) {
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
@@ -1458,6 +1569,7 @@ function renderCard() {
   const q = deck[index];
   const turnEl = document.getElementById('cTurn');
   document.getElementById('cPack').textContent = q.pack;
+  turnEl.style.display = opts.names ? '' : 'none';
   if (q.kind === 'duo') {
     turnEl.textContent = 'Question pour vous deux';
     turnEl.className = 'turn duo';
@@ -1468,15 +1580,19 @@ function renderCard() {
   document.getElementById('cText').textContent = q.text;
   // Progression par chapitre, pas sur la pioche totale (le dernier
   // chapitre peut être plus court que 5).
-  const roundTotal = Math.min(ROUND_SIZE, answeredInRound + (deck.length - index));
-  document.getElementById('bar').style.width = ((answeredInRound + 1) / roundTotal * 100) + '%';
-  document.getElementById('counter').textContent =
-    'Chapitre ' + round + ' · ' + (answeredInRound + 1) + ' / ' + roundTotal;
-  document.getElementById('prevBtn').disabled = index === 0 || answeredInRound === 0;
+  document.querySelector('.progress').style.visibility = opts.chapters ? '' : 'hidden';
+  document.getElementById('counter').style.display = opts.chapters ? '' : 'none';
+  if (opts.chapters) {
+    const roundTotal = Math.min(ROUND_SIZE, answeredInRound + (deck.length - index));
+    document.getElementById('bar').style.width = ((answeredInRound + 1) / roundTotal * 100) + '%';
+    document.getElementById('counter').textContent =
+      'Chapitre ' + round + ' · ' + (answeredInRound + 1) + ' / ' + roundTotal;
+  }
+  document.getElementById('prevBtn').disabled = index === 0 || (opts.chapters && answeredInRound === 0);
 }
 
 function prevQuestion() {
-  if (index === 0 || answeredInRound === 0) return;
+  if (index === 0 || (opts.chapters && answeredInRound === 0)) return;
   index--;
   answeredInRound = Math.max(0, answeredInRound - 1);
   // On restitue le tour tel qu'il était affiché sur cette question.
@@ -1494,7 +1610,7 @@ function nextQuestion() {
     index++;
     card.classList.remove('out');
     if (index >= deck.length) return endGame();
-    if (answeredInRound >= ROUND_SIZE) {
+    if (opts.chapters && answeredInRound >= ROUND_SIZE) {
       document.getElementById('pauseTitle').textContent = chapterTitle(round);
       show('pause');
       return;
@@ -1512,11 +1628,13 @@ function skipQuestion() {
 
 function endGame() {
   document.getElementById('endText').textContent =
-    names[0] + ' & ' + names[1] + ', vous vous connaissez déjà beaucoup mieux. La suite se passe sans téléphone…';
+    (opts.names ? names[0] + ' & ' + names[1] + ', vous' : 'Vous') +
+    ' vous connaissez déjà beaucoup mieux. La suite se passe sans téléphone…';
   show('end');
 }
 
 renderPacks();
+renderOpts();
 
 /* ============ Installation sur l'écran d'accueil (PWA) ============
    Chrome/Android ne propose l'installation que si la page a un
