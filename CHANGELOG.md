@@ -3,6 +3,8 @@
 ## [Unreleased] — 0.1.1
 
 - Chapitres de 5 questions au lieu de 15.
+- La démo web rejoint le dépôt (`docs/index.html`) pour être publiée via
+  GitHub Pages.
 - Le nombre de questions n'est plus affiché sur l'écran de choix des thèmes
   (cartes et bouton « C'est parti ! »).
 
