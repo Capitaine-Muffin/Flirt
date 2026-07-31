@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+- La variante « sans prénom » perd aussi les chapitres : les cartes
+  défilent en continu, sans pause ni compteur.
 - La variante « sans prénom » perd son s : dossier renommé
   `docs/sansprenom/` (l'URL change), textes corrigés.
 
