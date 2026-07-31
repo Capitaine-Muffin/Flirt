@@ -32,9 +32,7 @@ export default function PackCard({ pack, unlocked, selected = false, onPress }: 
           {selected && <Text style={styles.check}>✓</Text>}
         </View>
         <Text style={styles.description}>{pack.description}</Text>
-        <Text style={styles.meta}>
-          {pack.questions.length} questions · {intensityLabel(pack.intensity)}
-        </Text>
+        <Text style={styles.meta}>{intensityLabel(pack.intensity)}</Text>
       </View>
     </Pressable>
   );

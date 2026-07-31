@@ -27,11 +27,11 @@ interface GameQuestion {
 }
 
 /**
- * Une partie se joue en chapitres courts : 15 questions, puis une pause
+ * Une partie se joue en chapitres courts : 5 questions, puis une pause
  * (« Chapitre suivant ? »). Les chapitres suivants piochent dans les
  * questions pas encore vues — aucune répétition avant épuisement.
  */
-const ROUND_SIZE = 15;
+const ROUND_SIZE = 5;
 
 const ORDINALS = [
   'premier', 'deuxième', 'troisième', 'quatrième', 'cinquième',
