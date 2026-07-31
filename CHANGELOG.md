@@ -4,6 +4,11 @@
 
 (rien pour l'instant)
 
+## [0.5.3] — 2026-07-31
+
+- Sortie technique sans changement : sert à vérifier que l'app installée
+  se met bien à jour.
+
 ## [0.5.2] — 2026-07-31
 
 - On peut redonner un avis : après le « Merci », le bouton d'envoi
