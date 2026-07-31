@@ -4,6 +4,11 @@
 
 (rien pour l'instant)
 
+## [0.3.2] — 2026-07-31
+
+- Le numéro de version s'affiche : en bas de l'accueil de l'app (lu depuis
+  `app.json`) et dans le bandeau haut des deux démos web.
+
 ## [0.3.1] — 2026-07-31
 
 - Démos web : le bouton « C'est parti ! » flotte en bas de l'écran des

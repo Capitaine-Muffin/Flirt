@@ -1,6 +1,7 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import appJson from '../../app.json';
 import AdBanner from '../components/AdBanner';
 import Button from '../components/Button';
 import { ScreenProps } from '../navigation';
@@ -37,6 +38,7 @@ export default function HomeScreen({ navigation }: ScreenProps<'Home'>) {
           magie opérer.
         </Text>
         <AdBanner />
+        <Text style={styles.version}>v{appJson.expo.version}</Text>
       </View>
     </SafeAreaView>
   );
@@ -68,6 +70,13 @@ const styles = StyleSheet.create({
     marginTop: spacing.sm,
   },
   footer: { marginTop: spacing.xl },
+  version: {
+    color: colors.textMuted,
+    fontSize: 11,
+    textAlign: 'center',
+    marginTop: spacing.sm,
+    opacity: 0.6,
+  },
   howTo: {
     color: colors.textMuted,
     fontSize: font.small,
