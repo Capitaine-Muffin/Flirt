@@ -2,7 +2,7 @@
  * Préparation de la partie : les deux prénoms + le choix des packs.
  * Pensé pour être rempli en quelques secondes, en plein date.
  */
-import React, { useMemo, useState } from 'react';
+import React, { useState } from 'react';
 import {
   KeyboardAvoidingView,
   Platform,
@@ -26,15 +26,6 @@ export default function SetupScreen({ navigation }: ScreenProps<'Setup'>) {
   const [nameB, setNameB] = useState(playerB);
   const [selectedIds, setSelectedIds] = useState<string[]>(
     PACKS.filter((p) => !p.premium).map((p) => p.id),
-  );
-
-  const questionCount = useMemo(
-    () =>
-      PACKS.filter((p) => selectedIds.includes(p.id)).reduce(
-        (sum, p) => sum + p.questions.length,
-        0,
-      ),
-    [selectedIds],
   );
 
   const togglePack = (packId: string) => {
@@ -97,7 +88,7 @@ export default function SetupScreen({ navigation }: ScreenProps<'Setup'>) {
             label={
               selectedIds.length === 0
                 ? 'Sélectionnez au moins un thème'
-                : `C'est parti ! (${questionCount} questions)`
+                : "C'est parti !"
             }
             onPress={start}
             disabled={selectedIds.length === 0}
