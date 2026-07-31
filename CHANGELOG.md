@@ -1,6 +1,10 @@
 # Changelog
 
-## [Unreleased] — 0.1.1
+## [Unreleased]
+
+(rien pour l'instant)
+
+## [0.1.1] — 2026-07-31
 
 - Chapitres de 5 questions au lieu de 15.
 - La démo web rejoint le dépôt (`docs/index.html`) pour être publiée via
