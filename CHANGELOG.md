@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+(rien pour l'instant)
+
+## [0.4.1] — 2026-07-31
+
 - La variante « sans prénom » perd aussi les chapitres : les cartes
   défilent en continu, sans pause ni compteur.
 - La variante « sans prénom » perd son s : dossier renommé
