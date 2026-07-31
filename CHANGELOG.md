@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+(rien pour l'instant)
+
+## [0.3.0] — 2026-07-31
+
 - Nouvelle icône « F. » (monogramme serif, point rose, fond nuit) : icône
   d'app, icônes adaptatives Android, splash, favicon et icônes web.
 
