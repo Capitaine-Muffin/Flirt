@@ -4,6 +4,11 @@
 
 (rien pour l'instant)
 
+## [0.2.1] — 2026-07-31
+
+- Le nombre de questions n'apparaît plus non plus en boutique : on achète
+  un thème, pas un nombre de questions (app + les deux démos web).
+
 ## [0.2.0] — 2026-07-31
 
 - Nouveau mode jouable en test dans la démo web : « sans chapitres »

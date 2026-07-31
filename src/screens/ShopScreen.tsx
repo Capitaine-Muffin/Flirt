@@ -124,7 +124,6 @@ export default function ShopScreen(_props: ScreenProps<'Shop'>) {
               <View style={styles.packInfo}>
                 <Text style={styles.packTitle}>{pack.title}</Text>
                 <Text style={styles.packDescription}>{pack.description}</Text>
-                <Text style={styles.packMeta}>{pack.questions.length} questions</Text>
               </View>
               {owned ? (
                 <Text style={styles.packOwned}>✓</Text>
@@ -199,7 +198,6 @@ const styles = StyleSheet.create({
   packInfo: { flex: 1 },
   packTitle: { color: colors.text, fontSize: font.body, fontWeight: '700' },
   packDescription: { color: colors.textMuted, fontSize: font.small, marginTop: 2 },
-  packMeta: { color: colors.textMuted, fontSize: font.small, marginTop: 2 },
   packOwned: { color: colors.success, fontSize: 22, fontWeight: '900', marginLeft: spacing.sm },
   packBuy: {
     paddingVertical: spacing.sm,
