@@ -4,6 +4,11 @@
 
 (rien pour l'instant)
 
+## [0.5.5] — 2026-07-31
+
+- Par défaut, prénoms et chapitres sont désactivés (activables dans les
+  réglages). Les testeurs ayant déjà fait un choix le conservent.
+
 ## [0.5.4] — 2026-07-31
 
 - L'app installée se met vraiment à jour au lancement : le service worker
