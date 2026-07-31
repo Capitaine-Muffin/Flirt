@@ -312,7 +312,7 @@
 </head>
 <body>
 <div id="phone">
-  <div class="demo-note">Démo web · achats simulés · v0.5.1</div>
+  <div class="demo-note">Démo web · achats simulés · v0.5.2</div>
 
   <!-- Accueil -->
   <section class="screen active" id="home">
@@ -1426,6 +1426,11 @@ async function sendFeedback() {
     if (!(await res.json()).success) throw new Error('refus');
     btn.textContent = 'Merci pour ton retour ! ❤️';
     document.getElementById('fbText').value = '';
+    // Le merci s'efface tout seul : on peut redonner un avis à volonté.
+    setTimeout(() => {
+      btn.disabled = false;
+      btn.textContent = 'Envoyer';
+    }, 2500);
   } catch (e) {
     btn.disabled = false;
     btn.textContent = 'Échec de l\'envoi — réessaie';
