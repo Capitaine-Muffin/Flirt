@@ -288,6 +288,7 @@
       <button class="primary" onclick="show('setup')">Commencer une partie</button>
       <button onclick="openShop('home')">Boutique · Premium &amp; Packs</button>
       <button id="installBtn" hidden onclick="installApp()">📲 Installer sur l'écran d'accueil</button>
+      <div class="ad" id="iosHint" hidden>📲 Pour installer le jeu : touche le bouton Partager <span aria-hidden="true">⬆️</span> de Safari, puis « Sur l'écran d'accueil ».</div>
       <div class="ad" id="homeAd">Publicité — bannière discrète ici dans la version gratuite, jamais pendant la partie.</div>
     </div>
   </section>
@@ -1519,6 +1520,14 @@ renderPacks();
    vrai bouton sur l'accueil, plus visible pour les testeurs. */
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => navigator.serviceWorker.register('sw.js'));
+}
+/* Safari iOS n'a pas de popup d'installation : on affiche la marche
+   à suivre, seulement sur iPhone/iPad et hors app déjà installée. */
+const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
+const isStandalone = navigator.standalone === true
+  || matchMedia('(display-mode: standalone)').matches;
+if (isIOS && !isStandalone) {
+  document.getElementById('iosHint').hidden = false;
 }
 let installPrompt = null;
 window.addEventListener('beforeinstallprompt', (e) => {
