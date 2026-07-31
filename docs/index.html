@@ -172,7 +172,12 @@
   .pack .meta { color: var(--muted); font-size: 12px; margin-top: 3px; font-variant-numeric: tabular-nums; }
   .pack .tick { color: var(--primary); font-size: 20px; font-weight: 900; visibility: hidden; }
   .pack.selected .tick { visibility: visible; }
-  .setup-footer { padding-top: 14px; }
+  .setup-footer {
+    position: sticky;
+    bottom: 0;
+    padding: 14px 0 max(10px, env(safe-area-inset-bottom));
+    background: linear-gradient(to top, var(--bg) 62%, transparent);
+  }
   .setup-footer button { width: 100%; }
   .back-link { align-self: flex-start; padding: 8px 0; }
 

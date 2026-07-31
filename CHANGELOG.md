@@ -2,7 +2,8 @@
 
 ## [Unreleased]
 
-(rien pour l'instant)
+- Démos web : le bouton « C'est parti ! » flotte en bas de l'écran des
+  thèmes — plus besoin de descendre toute la liste pour lancer la partie.
 
 ## [0.3.0] — 2026-07-31
 
