@@ -6,7 +6,7 @@
 <meta name="theme-color" content="#160B1A">
 <link rel="icon" href="../icons/icon-192.png">
 <link rel="apple-touch-icon" href="../icons/icon-192.png">
-<title>Flirt — démo sans chapitres</title>
+<title>Flirt — démo sans prénoms</title>
 <style>
   /*
    * Démo web de l'app mobile Flirt — version comparateur :
@@ -280,7 +280,7 @@
 </head>
 <body>
 <div id="phone">
-  <div class="demo-note">Démo web · sans chapitres · achats simulés · v0.4.0</div>
+  <div class="demo-note">Démo web · sans prénoms · achats simulés · v0.4.0</div>
 
   <!-- Accueil -->
   <section class="screen active" id="home">
@@ -317,12 +317,6 @@
   <!-- Préparation -->
   <section class="screen" id="setup">
     <button class="ghost back-link" onclick="show('home')">← Accueil</button>
-    <h2>Qui joue ce soir ?</h2>
-    <div class="names">
-      <input id="nameA" placeholder="Prénom 1" maxlength="20" autocomplete="off">
-      <span>❤️</span>
-      <input id="nameB" placeholder="Prénom 2" maxlength="20" autocomplete="off">
-    </div>
     <h2>Choisissez vos thèmes</h2>
     <div id="packs"></div>
     <div class="setup-footer">
@@ -334,11 +328,12 @@
   <section class="screen" id="game">
     <div class="game-top">
       <button class="quit" onclick="show('home')">✕ Quitter</button>
+      <div class="progress"><i id="bar"></i></div>
+      <div class="counter" id="counter"></div>
     </div>
     <div class="card-area">
       <div class="card" id="card" onclick="nextQuestion()">
         <div class="pack-label" id="cPack"></div>
-        <div class="turn" id="cTurn"></div>
         <div class="question" id="cText"></div>
         <div class="hint">Touchez la carte pour la question suivante</div>
       </div>
@@ -348,6 +343,14 @@
       <button class="ghost" onclick="skipQuestion()">Passer cette question</button>
     </div>
     <div class="ad-compact" id="gameAd">Publicité</div>
+  </section>
+
+  <!-- Pause entre deux chapitres -->
+  <section class="screen" id="pause">
+    <h2><span id="pauseTitle">Fin du chapitre</span><span class="dot">.</span></h2>
+    <button class="primary" onclick="nextRound()">Chapitre suivant</button>
+    <button class="ghost" onclick="show('home')">Retour à l'accueil</button>
+    <div class="ad-compact" id="pauseAd">Publicité</div>
   </section>
 
   <!-- Fin -->
@@ -1275,11 +1278,24 @@ const PACKS = [
 ];
 
 /* ============ État du jeu ============
-   Variante sans chapitres : les cartes défilent en continu, sans pause
-   ni compteur, jusqu'à épuisement de la sélection. */
+   Une partie se joue en chapitres de 5 questions, avec une pause entre
+   deux. Les chapitres suivants piochent dans les questions pas encore
+   vues — aucune répétition avant épuisement de la sélection. */
+const ROUND_SIZE = 5;
+
+const ORDINALS = [
+  'premier', 'deuxième', 'troisième', 'quatrième', 'cinquième',
+  'sixième', 'septième', 'huitième', 'neuvième', 'dixième',
+];
+
+/* « Fin du troisième chapitre » — repli chiffré au-delà du dixième. */
+function chapterTitle(n) {
+  return n <= ORDINALS.length ? 'Fin du ' + ORDINALS[n - 1] + ' chapitre' : 'Fin du chapitre ' + n;
+}
 
 const selected = new Set(PACKS.filter(p => !p.premium).map(p => p.id));
-let deck = [], index = 0, soloCount = 0, names = ['Joueur 1', 'Joueur 2'];
+let deck = [], index = 0;
+let round = 1, answeredInRound = 0;
 
 function show(id) {
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
@@ -1319,6 +1335,7 @@ function updateAd() {
   document.getElementById('homeAd').style.display = display;
   document.getElementById('gameAd').style.display = display;
   document.getElementById('endAd').style.display = display;
+  document.getElementById('pauseAd').style.display = display;
 }
 function renderShop() {
   const allPacksOwned = PACKS.filter(p => p.premium).every(p => isPackUnlocked(p.id));
@@ -1401,18 +1418,21 @@ function shuffle(a) {
 }
 
 function startGame() {
-  names = [
-    document.getElementById('nameA').value.trim() || 'Joueur 1',
-    document.getElementById('nameB').value.trim() || 'Joueur 2',
-  ];
   deck = shuffle(PACKS.filter(p => selected.has(p.id))
     .flatMap(p => p.q.map(item => ({
       text: typeof item === 'string' ? item : item.t,
       pack: p.emoji + ' ' + p.title,
-      kind: typeof item === 'string' ? 'solo' : 'duo',
     }))));
   index = 0;
-  soloCount = 0;
+  round = 1;
+  answeredInRound = 0;
+  show('game');
+  renderCard();
+}
+
+function nextRound() {
+  answeredInRound = 0;
+  round++;
   show('game');
   renderCard();
 }
@@ -1420,36 +1440,38 @@ function startGame() {
 function renderCard() {
   if (index >= deck.length) return endGame();
   const q = deck[index];
-  const turnEl = document.getElementById('cTurn');
   document.getElementById('cPack').textContent = q.pack;
-  if (q.kind === 'duo') {
-    turnEl.textContent = 'Question pour vous deux';
-    turnEl.className = 'turn duo';
-  } else {
-    turnEl.textContent = 'Question pour ' + names[soloCount % 2];
-    turnEl.className = 'turn';
-  }
   document.getElementById('cText').textContent = q.text;
-  document.getElementById('prevBtn').disabled = index === 0;
+  // Progression par chapitre, pas sur la pioche totale (le dernier
+  // chapitre peut être plus court que 5).
+  const roundTotal = Math.min(ROUND_SIZE, answeredInRound + (deck.length - index));
+  document.getElementById('bar').style.width = ((answeredInRound + 1) / roundTotal * 100) + '%';
+  document.getElementById('counter').textContent =
+    'Chapitre ' + round + ' · ' + (answeredInRound + 1) + ' / ' + roundTotal;
+  document.getElementById('prevBtn').disabled = index === 0 || answeredInRound === 0;
 }
 
 function prevQuestion() {
-  if (index === 0) return;
+  if (index === 0 || answeredInRound === 0) return;
   index--;
-  // On restitue le tour tel qu'il était affiché sur cette question.
-  if (deck[index].kind === 'solo') soloCount = Math.max(0, soloCount - 1);
+  answeredInRound = Math.max(0, answeredInRound - 1);
   renderCard();
 }
 
 function nextQuestion() {
   if (index >= deck.length) return;
-  if (deck[index].kind === 'solo') soloCount++;
+  answeredInRound++;
   const card = document.getElementById('card');
   card.classList.add('out');
   setTimeout(() => {
     index++;
     card.classList.remove('out');
     if (index >= deck.length) return endGame();
+    if (answeredInRound >= ROUND_SIZE) {
+      document.getElementById('pauseTitle').textContent = chapterTitle(round);
+      show('pause');
+      return;
+    }
     renderCard();
   }, 170);
 }
@@ -1463,7 +1485,7 @@ function skipQuestion() {
 
 function endGame() {
   document.getElementById('endText').textContent =
-    names[0] + ' & ' + names[1] + ', vous vous connaissez déjà beaucoup mieux. La suite se passe sans téléphone…';
+    'Vous vous connaissez déjà beaucoup mieux. La suite se passe sans téléphone…';
   show('end');
 }
 

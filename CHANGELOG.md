@@ -4,6 +4,12 @@
 
 (rien pour l'instant)
 
+## [0.4.0] — 2026-07-31
+
+- Troisième mode jouable en test dans la démo web : « sans prénoms »
+  (`docs/sansprenoms/`) — pas de saisie des prénoms, questions non
+  attribuées : une carte, une question, et les joueurs décident qui répond.
+
 ## [0.3.2] — 2026-07-31
 
 - Le numéro de version s'affiche : en bas de l'accueil de l'app (lu depuis
