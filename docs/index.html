@@ -312,7 +312,7 @@
 </head>
 <body>
 <div id="phone">
-  <div class="demo-note">Démo web · achats simulés · v0.5.4</div>
+  <div class="demo-note">Démo web · achats simulés · v0.5.5</div>
 
   <!-- Accueil -->
   <section class="screen active" id="home">
@@ -354,13 +354,13 @@
     <button class="ghost back-link" onclick="show('home')">← Accueil</button>
     <h2>Réglages</h2>
     <div class="modes">
-      <button class="mode selected" id="optNames" onclick="toggleOpt('names')">
+      <button class="mode" id="optNames" onclick="toggleOpt('names')">
         <span class="emoji">🗣️</span>
         <span class="info"><span class="title">Prénoms &amp; tours de parole</span>
         <span class="desc">Questions adressées, chacun son tour</span></span>
         <span class="tick">✓</span>
       </button>
-      <button class="mode selected" id="optChapters" onclick="toggleOpt('chapters')">
+      <button class="mode" id="optChapters" onclick="toggleOpt('chapters')">
         <span class="emoji">📖</span>
         <span class="info"><span class="title">Chapitres</span>
         <span class="desc">Une pause toutes les 5 questions</span></span>
@@ -1378,7 +1378,7 @@ let round = 1, answeredInRound = 0;
 /* ============ Réglages de partie ============
    Deux interrupteurs testés auprès des joueurs : prénoms et chapitres.
    Mémorisés dans le navigateur, pour que chacun garde sa formule. */
-const opts = { names: true, chapters: true };
+const opts = { names: false, chapters: false };
 try { Object.assign(opts, JSON.parse(localStorage.getItem('flirt-opts') || '{}')); } catch (e) {}
 function toggleOpt(key) {
   opts[key] = !opts[key];
