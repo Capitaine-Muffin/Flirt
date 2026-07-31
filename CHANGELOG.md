@@ -2,7 +2,9 @@
 
 ## [Unreleased]
 
-(rien pour l'instant)
+- Nouveau mode jouable en test dans la démo web : « sans chapitres »
+  (`docs/sanschapitre/`) — les cartes défilent en continu, sans pause ni
+  compteur, jusqu'à épuisement des questions.
 
 ## [0.1.3] — 2026-07-31
 
