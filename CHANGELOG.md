@@ -4,6 +4,11 @@
 
 (rien pour l'instant)
 
+## [0.5.2] — 2026-07-31
+
+- On peut redonner un avis : après le « Merci », le bouton d'envoi
+  redevient actif au bout de quelques secondes.
+
 ## [0.5.1] — 2026-07-31
 
 - Le retour testeur s'envoie silencieusement (service Web3Forms) : plus
