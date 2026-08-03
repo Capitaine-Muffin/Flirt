@@ -1,9 +1,9 @@
 /**
- * État global de l'app : prénoms des joueurs, achats débloqués, persistance.
+ * État global de l'app : achats débloqués, persistance.
  *
  * Tout est sauvegardé dans AsyncStorage pour que l'app se souvienne des
- * achats et des prénoms d'une session à l'autre (les achats réels sont en
- * plus restaurables via le store — voir services/purchases.ts).
+ * achats d'une session à l'autre (les achats réels sont en plus
+ * restaurables via le store — voir services/purchases.ts).
  */
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, {
@@ -19,17 +19,12 @@ import { PACKS, PRODUCT_IDS } from '../data/questions';
 const STORAGE_KEY = 'flirt/state/v1';
 
 interface PersistedState {
-  playerA: string;
-  playerB: string;
   /** productIds achetés (packs, premium, bundle). */
   purchases: string[];
 }
 
 interface AppContextValue {
   ready: boolean;
-  playerA: string;
-  playerB: string;
-  setPlayers: (a: string, b: string) => void;
   /** Premium = plus aucune publicité. */
   isPremium: boolean;
   /** Un pack est-il jouable (gratuit ou acheté) ? */
@@ -41,7 +36,7 @@ interface AppContextValue {
 
 const AppContext = createContext<AppContextValue | null>(null);
 
-const DEFAULT_STATE: PersistedState = { playerA: '', playerB: '', purchases: [] };
+const DEFAULT_STATE: PersistedState = { purchases: [] };
 
 export function AppProvider({ children }: { children: React.ReactNode }) {
   const [ready, setReady] = useState(false);
@@ -60,11 +55,6 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     setState(next);
     AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(next)).catch(() => {});
   }, []);
-
-  const setPlayers = useCallback(
-    (a: string, b: string) => persist({ ...state, playerA: a, playerB: b }),
-    [persist, state],
-  );
 
   const registerPurchases = useCallback(
     (productIds: string[]) => {
@@ -96,15 +86,12 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   const value = useMemo(
     () => ({
       ready,
-      playerA: state.playerA,
-      playerB: state.playerB,
-      setPlayers,
       isPremium,
       isPackUnlocked,
       registerPurchase,
       registerPurchases,
     }),
-    [ready, state, setPlayers, isPremium, isPackUnlocked, registerPurchase, registerPurchases],
+    [ready, isPremium, isPackUnlocked, registerPurchase, registerPurchases],
   );
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;
