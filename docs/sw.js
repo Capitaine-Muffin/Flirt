@@ -1,7 +1,7 @@
 /* Service worker de la démo : réseau d'abord, cache en secours.
    Les visiteurs ont toujours la dernière version en ligne, et la
    version installée continue de marcher hors connexion. */
-const CACHE = 'flirt-demo-v2';
+const CACHE = 'flirt-demo-v3';
 
 self.addEventListener('install', () => self.skipWaiting());
 

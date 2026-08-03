@@ -10,8 +10,8 @@
 <title>Flirt — démo jouable</title>
 <style>
   /*
-   * Démo web de l'app mobile Flirt — version comparateur :
-   * 10 écrans d'accueil au choix + 3 mécaniques de jeu.
+   * Démo web de l'app mobile Flirt — version finale simplifiée :
+   * les cartes défilent en continu, sans prénoms ni chapitres.
    * Thème sombre volontaire et unique : soirée, lumière tamisée.
    */
   :root {
@@ -75,21 +75,6 @@
     box-shadow: 0 8px 24px color-mix(in srgb, var(--accent) 35%, transparent);
   }
 
-  /* Sélecteur de version (outil de démo uniquement) */
-  .variant-bar {
-    display: flex; align-items: center; justify-content: center; gap: 10px;
-    margin-top: 14px;
-    border: 1px dashed var(--surface-light);
-    border-radius: 12px;
-    padding: 8px 10px;
-  }
-  .variant-bar .label { color: var(--muted); font-size: 12.5px; font-variant-numeric: tabular-nums; }
-  .variant-bar .label b { color: var(--text); font-weight: 700; }
-  .variant-bar button {
-    padding: 6px 14px; font-size: 15px;
-    background: var(--surface); border: 1px solid var(--surface-light);
-  }
-
   .ad {
     margin-top: 10px;
     border: 1px dashed var(--surface-light);
@@ -120,66 +105,6 @@
 
   /* ---------- Préparation ---------- */
   h2 { font-family: var(--display); font-size: 24px; font-weight: 400; letter-spacing: 1px; margin: 16px 0 10px; }
-  .names { display: flex; align-items: center; gap: 10px; }
-  .names input {
-    flex: 1; min-width: 0;
-    background: var(--surface);
-    border: 1px solid var(--surface-light);
-    border-radius: 14px;
-    color: var(--text);
-    font-size: 16px;
-    padding: 14px 16px;
-  }
-  .names input::placeholder { color: var(--muted); }
-  .names input:focus { outline: none; border-color: var(--primary); }
-
-  .modes { display: flex; flex-direction: column; gap: 8px; }
-  .mode {
-    display: flex; align-items: center; gap: 12px;
-    text-align: left;
-    background: var(--surface);
-    border: 2px solid transparent;
-    border-radius: 14px;
-    padding: 11px 14px;
-    font-weight: 400;
-  }
-  .mode.selected { border-color: var(--gold); }
-  .mode .emoji { font-size: 24px; }
-  .mode .title { font-weight: 700; font-size: 15px; }
-  .mode .desc { color: var(--muted); font-size: 12.5px; margin-top: 2px; }
-  .mode .reco { color: var(--gold); font-size: 10.5px; letter-spacing: 1px; text-transform: uppercase; font-weight: 700; margin-left: 6px; }
-  .mode .info { flex: 1; display: flex; flex-direction: column; }
-  .mode .tick { color: var(--gold); font-size: 20px; font-weight: 900; visibility: hidden; }
-  .mode.selected .tick { visibility: visible; }
-
-  /* ---------- Retour testeurs ---------- */
-  #feedback { overflow-y: auto; gap: 10px; }
-  .fb-q { color: var(--muted); font-size: 14px; margin-top: 6px; }
-  .fb-row { display: flex; gap: 8px; }
-  .chip {
-    flex: 1;
-    background: var(--surface);
-    border: 2px solid transparent;
-    border-radius: 999px;
-    padding: 12px;
-    font-weight: 600;
-    font-size: 14px;
-  }
-  .chip.selected { border-color: var(--gold); }
-  #fbText {
-    background: var(--surface);
-    border: 1px solid var(--surface-light);
-    border-radius: 14px;
-    color: var(--text);
-    font-family: var(--body);
-    font-size: 15px;
-    padding: 14px 16px;
-    min-height: 110px;
-    resize: vertical;
-  }
-  #fbText::placeholder { color: var(--muted); }
-  #fbText:focus { outline: none; border-color: var(--primary); }
-
   #packs { display: flex; flex-direction: column; gap: 8px; overflow-y: auto; }
   .pack {
     display: flex; align-items: center; gap: 14px;
@@ -220,9 +145,6 @@
     background: var(--surface); border: 1px solid var(--surface-light);
     color: var(--muted); font-weight: 600;
   }
-  .progress { flex: 1; height: 4px; background: var(--surface); border-radius: 999px; overflow: hidden; }
-  .progress i { display: block; height: 100%; width: 0; background: linear-gradient(90deg, var(--primary), var(--gold)); transition: width .3s ease; }
-  .counter { color: var(--muted); font-size: 12.5px; font-variant-numeric: tabular-nums; white-space: nowrap; }
   .card-area { flex: 1; display: flex; align-items: center; }
   .card {
     width: 100%;
@@ -238,9 +160,6 @@
   }
   .card.out { opacity: 0; transform: translateY(10px) rotate(-1deg); }
   .card .pack-label { color: var(--muted); font-size: 11px; letter-spacing: 2.5px; text-transform: uppercase; }
-  .card .turn { color: var(--primary); font-size: 20px; font-weight: 800; margin-top: 16px; }
-  .card .turn.duo { color: var(--gold); }
-  .card .asker { color: var(--muted); font-size: 13.5px; margin-top: 5px; }
   .card .question {
     font-family: var(--display);
     font-size: 27px;
@@ -252,13 +171,11 @@
   .game-footer { display: flex; justify-content: space-between; gap: 8px; }
   .game-footer button { flex: 1; }
 
-  /* ---------- Fin & pause entre chapitres ---------- */
-  #end, #pause { justify-content: center; text-align: center; gap: 12px; }
-  #end h2, #pause h2 { font-size: 34px; margin: 0; }
-  /* La pause n'a plus de texte : le titre reprend l'air que la phrase donnait. */
-  #pause h2 { margin-bottom: 14px; }
-  #end h2 .dot, #pause h2 .dot { color: var(--primary); }
-  #end p, #pause p { color: var(--muted); line-height: 1.6; max-width: 32ch; margin: 0 auto 14px; }
+  /* ---------- Fin ---------- */
+  #end { justify-content: center; text-align: center; gap: 12px; }
+  #end h2 { font-size: 34px; margin: 0; }
+  #end h2 .dot { color: var(--primary); }
+  #end p { color: var(--muted); line-height: 1.6; max-width: 32ch; margin: 0 auto 14px; }
 
   /* ---------- Boutique ---------- */
   #shop { overflow-y: auto; }
@@ -312,7 +229,7 @@
 </head>
 <body>
 <div id="phone">
-  <div class="demo-note">Démo web · achats simulés · v0.5.5</div>
+  <div class="demo-note">Démo web · achats simulés · v0.6.0</div>
 
   <!-- Accueil -->
   <section class="screen active" id="home">
@@ -323,7 +240,6 @@
     <div class="home-actions">
       <button class="primary" onclick="show('setup')">Commencer une partie</button>
       <button onclick="openShop('home')">Boutique · Premium &amp; Packs</button>
-      <button class="ghost" onclick="show('feedback')">💬 Donner ton avis</button>
       <button id="installBtn" hidden onclick="installApp()">📲 Installer sur l'écran d'accueil</button>
       <div class="ad" id="iosHint" hidden>📲 Pour installer le jeu : touche le bouton Partager <span aria-hidden="true">⬆️</span> de Safari, puis « Sur l'écran d'accueil ».</div>
       <div class="ad" id="homeAd">Publicité — bannière discrète ici dans la version gratuite, jamais pendant la partie.</div>
@@ -352,29 +268,6 @@
   <!-- Préparation -->
   <section class="screen" id="setup">
     <button class="ghost back-link" onclick="show('home')">← Accueil</button>
-    <h2>Réglages</h2>
-    <div class="modes">
-      <button class="mode" id="optNames" onclick="toggleOpt('names')">
-        <span class="emoji">🗣️</span>
-        <span class="info"><span class="title">Prénoms &amp; tours de parole</span>
-        <span class="desc">Questions adressées, chacun son tour</span></span>
-        <span class="tick">✓</span>
-      </button>
-      <button class="mode" id="optChapters" onclick="toggleOpt('chapters')">
-        <span class="emoji">📖</span>
-        <span class="info"><span class="title">Chapitres</span>
-        <span class="desc">Une pause toutes les 5 questions</span></span>
-        <span class="tick">✓</span>
-      </button>
-    </div>
-    <div id="namesBlock">
-    <h2>Qui joue ce soir ?</h2>
-    <div class="names">
-      <input id="nameA" placeholder="Prénom 1" maxlength="20" autocomplete="off">
-      <span>❤️</span>
-      <input id="nameB" placeholder="Prénom 2" maxlength="20" autocomplete="off">
-    </div>
-    </div>
     <h2>Choisissez vos thèmes</h2>
     <div id="packs"></div>
     <div class="setup-footer">
@@ -386,13 +279,10 @@
   <section class="screen" id="game">
     <div class="game-top">
       <button class="quit" onclick="show('home')">✕ Quitter</button>
-      <div class="progress"><i id="bar"></i></div>
-      <div class="counter" id="counter"></div>
     </div>
     <div class="card-area">
       <div class="card" id="card" onclick="nextQuestion()">
         <div class="pack-label" id="cPack"></div>
-        <div class="turn" id="cTurn"></div>
         <div class="question" id="cText"></div>
         <div class="hint">Touchez la carte pour la question suivante</div>
       </div>
@@ -404,39 +294,12 @@
     <div class="ad-compact" id="gameAd">Publicité</div>
   </section>
 
-  <!-- Pause entre deux chapitres -->
-  <section class="screen" id="pause">
-    <h2><span id="pauseTitle">Fin du chapitre</span><span class="dot">.</span></h2>
-    <button class="primary" onclick="nextRound()">Chapitre suivant</button>
-    <button class="ghost" onclick="show('home')">Retour à l'accueil</button>
-    <div class="ad-compact" id="pauseAd">Publicité</div>
-  </section>
-
-  <!-- Retour testeurs -->
-  <section class="screen" id="feedback">
-    <button class="ghost back-link" onclick="show('home')">← Accueil</button>
-    <h2>Ton avis compte</h2>
-    <p class="fb-q">Réponds en deux taps, ajoute un mot si tu veux : ton retour part directement au développeur.</p>
-    <div class="fb-q">Tu préfères jouer…</div>
-    <div class="fb-row">
-      <button class="chip" id="fbNamesOn" onclick="fbPick('names', true)">avec prénoms</button>
-      <button class="chip" id="fbNamesOff" onclick="fbPick('names', false)">sans prénoms</button>
-    </div>
-    <div class="fb-row">
-      <button class="chip" id="fbChapOn" onclick="fbPick('chapters', true)">avec chapitres</button>
-      <button class="chip" id="fbChapOff" onclick="fbPick('chapters', false)">sans chapitres</button>
-    </div>
-    <textarea id="fbText" placeholder="Un truc à dire ? Bug, idée, question préférée…"></textarea>
-    <button class="primary" id="fbSend" onclick="sendFeedback()">Envoyer</button>
-  </section>
-
   <!-- Fin -->
   <section class="screen" id="end">
     <h2>Vous avez fait le tour<span class="dot">.</span></h2>
-    <p id="endText"></p>
+    <p>Vous vous connaissez déjà beaucoup mieux. La suite se passe sans téléphone…</p>
     <button class="primary" onclick="startGame()">Rejouer avec les mêmes thèmes</button>
     <button class="ghost" onclick="show('home')">Retour à l'accueil</button>
-    <button class="ghost" onclick="show('feedback')">💬 Donner ton avis</button>
     <div class="ad-compact" id="endAd">Publicité</div>
   </section>
 
@@ -444,8 +307,9 @@
 
 <script>
 /* ============ Packs (identiques à src/data/questions.ts) ============
-   Mécanique « Mix » : chaîne = question solo (une personne répond, en
-   alternance) ; {t, d:1} = question duo (les deux répondent). */
+   Deux formes de question : chaîne = une personne répond ;
+   {t, d:1} = question pour les deux. Le jeu les traite pareil :
+   une carte, une question, les joueurs décident qui répond. */
 const PACKS = [
   { id: "brise-glace", title: "Brise-glace", emoji: "❄️", premium: false, intensity: 1,
     desc: "Pour lancer la conversation en douceur, sans pression.",
@@ -1356,86 +1220,10 @@ const PACKS = [
 ];
 
 /* ============ État du jeu ============
-   Une partie se joue en chapitres de 5 questions, avec une pause entre
-   deux. Les chapitres suivants piochent dans les questions pas encore
-   vues — aucune répétition avant épuisement de la sélection. */
-const ROUND_SIZE = 5;
-
-const ORDINALS = [
-  'premier', 'deuxième', 'troisième', 'quatrième', 'cinquième',
-  'sixième', 'septième', 'huitième', 'neuvième', 'dixième',
-];
-
-/* « Fin du troisième chapitre » — repli chiffré au-delà du dixième. */
-function chapterTitle(n) {
-  return n <= ORDINALS.length ? 'Fin du ' + ORDINALS[n - 1] + ' chapitre' : 'Fin du chapitre ' + n;
-}
-
+   Les cartes défilent en continu, sans pause ni compteur, jusqu'à
+   épuisement de la sélection — aucune répétition avant la fin. */
 const selected = new Set(PACKS.filter(p => !p.premium).map(p => p.id));
-let deck = [], index = 0, soloCount = 0, names = ['Joueur 1', 'Joueur 2'];
-let round = 1, answeredInRound = 0;
-
-/* ============ Réglages de partie ============
-   Deux interrupteurs testés auprès des joueurs : prénoms et chapitres.
-   Mémorisés dans le navigateur, pour que chacun garde sa formule. */
-const opts = { names: false, chapters: false };
-try { Object.assign(opts, JSON.parse(localStorage.getItem('flirt-opts') || '{}')); } catch (e) {}
-function toggleOpt(key) {
-  opts[key] = !opts[key];
-  try { localStorage.setItem('flirt-opts', JSON.stringify(opts)); } catch (e) {}
-  renderOpts();
-}
-function renderOpts() {
-  document.getElementById('optNames').classList.toggle('selected', opts.names);
-  document.getElementById('optChapters').classList.toggle('selected', opts.chapters);
-  document.getElementById('namesBlock').style.display = opts.names ? '' : 'none';
-}
-
-/* ============ Retour des testeurs ============
-   Envoi silencieux via Web3Forms : la réponse arrive par e-mail au
-   développeur, le testeur ne quitte jamais la page. */
-const fb = { names: null, chapters: null };
-function fbPick(key, val) {
-  fb[key] = fb[key] === val ? null : val;
-  const on = key === 'names' ? 'fbNamesOn' : 'fbChapOn';
-  const off = key === 'names' ? 'fbNamesOff' : 'fbChapOff';
-  document.getElementById(on).classList.toggle('selected', fb[key] === true);
-  document.getElementById(off).classList.toggle('selected', fb[key] === false);
-}
-async function sendFeedback() {
-  const btn = document.getElementById('fbSend');
-  btn.disabled = true;
-  btn.textContent = 'Envoi…';
-  const version = (document.querySelector('.demo-note').textContent.match(/v[\d.]+/) || ['?'])[0];
-  const pref = (v) => v === null ? '(pas répondu)' : v ? 'avec' : 'sans';
-  try {
-    const res = await fetch('https://api.web3forms.com/submit', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-      body: JSON.stringify({
-        access_key: 'da6ff3d6-c948-4329-af99-eaa79a468718',
-        subject: 'Retour Flirt (démo ' + version + ')',
-        from_name: 'Démo Flirt',
-        preference_prenoms: pref(fb.names),
-        preference_chapitres: pref(fb.chapters),
-        reglages_du_moment: 'prénoms ' + (opts.names ? 'activés' : 'coupés') +
-          ', chapitres ' + (opts.chapters ? 'activés' : 'coupés'),
-        message: document.getElementById('fbText').value || '(vide)',
-      }),
-    });
-    if (!(await res.json()).success) throw new Error('refus');
-    btn.textContent = 'Merci pour ton retour ! ❤️';
-    document.getElementById('fbText').value = '';
-    // Le merci s'efface tout seul : on peut redonner un avis à volonté.
-    setTimeout(() => {
-      btn.disabled = false;
-      btn.textContent = 'Envoyer';
-    }, 2500);
-  } catch (e) {
-    btn.disabled = false;
-    btn.textContent = 'Échec de l\'envoi — réessaie';
-  }
-}
+let deck = [], index = 0;
 
 function show(id) {
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
@@ -1475,7 +1263,6 @@ function updateAd() {
   document.getElementById('homeAd').style.display = display;
   document.getElementById('gameAd').style.display = display;
   document.getElementById('endAd').style.display = display;
-  document.getElementById('pauseAd').style.display = display;
 }
 function renderShop() {
   const allPacksOwned = PACKS.filter(p => p.premium).every(p => isPackUnlocked(p.id));
@@ -1558,27 +1345,12 @@ function shuffle(a) {
 }
 
 function startGame() {
-  names = [
-    document.getElementById('nameA').value.trim() || 'Joueur 1',
-    document.getElementById('nameB').value.trim() || 'Joueur 2',
-  ];
   deck = shuffle(PACKS.filter(p => selected.has(p.id))
     .flatMap(p => p.q.map(item => ({
       text: typeof item === 'string' ? item : item.t,
       pack: p.emoji + ' ' + p.title,
-      kind: typeof item === 'string' ? 'solo' : 'duo',
     }))));
   index = 0;
-  soloCount = 0;
-  round = 1;
-  answeredInRound = 0;
-  show('game');
-  renderCard();
-}
-
-function nextRound() {
-  answeredInRound = 0;
-  round++;
   show('game');
   renderCard();
 }
@@ -1586,54 +1358,25 @@ function nextRound() {
 function renderCard() {
   if (index >= deck.length) return endGame();
   const q = deck[index];
-  const turnEl = document.getElementById('cTurn');
   document.getElementById('cPack').textContent = q.pack;
-  turnEl.style.display = opts.names ? '' : 'none';
-  if (q.kind === 'duo') {
-    turnEl.textContent = 'Question pour vous deux';
-    turnEl.className = 'turn duo';
-  } else {
-    turnEl.textContent = 'Question pour ' + names[soloCount % 2];
-    turnEl.className = 'turn';
-  }
   document.getElementById('cText').textContent = q.text;
-  // Progression par chapitre, pas sur la pioche totale (le dernier
-  // chapitre peut être plus court que 5).
-  document.querySelector('.progress').style.visibility = opts.chapters ? '' : 'hidden';
-  document.getElementById('counter').style.display = opts.chapters ? '' : 'none';
-  if (opts.chapters) {
-    const roundTotal = Math.min(ROUND_SIZE, answeredInRound + (deck.length - index));
-    document.getElementById('bar').style.width = ((answeredInRound + 1) / roundTotal * 100) + '%';
-    document.getElementById('counter').textContent =
-      'Chapitre ' + round + ' · ' + (answeredInRound + 1) + ' / ' + roundTotal;
-  }
-  document.getElementById('prevBtn').disabled = index === 0 || (opts.chapters && answeredInRound === 0);
+  document.getElementById('prevBtn').disabled = index === 0;
 }
 
 function prevQuestion() {
-  if (index === 0 || (opts.chapters && answeredInRound === 0)) return;
+  if (index === 0) return;
   index--;
-  answeredInRound = Math.max(0, answeredInRound - 1);
-  // On restitue le tour tel qu'il était affiché sur cette question.
-  if (deck[index].kind === 'solo') soloCount = Math.max(0, soloCount - 1);
   renderCard();
 }
 
 function nextQuestion() {
   if (index >= deck.length) return;
-  if (deck[index].kind === 'solo') soloCount++;
-  answeredInRound++;
   const card = document.getElementById('card');
   card.classList.add('out');
   setTimeout(() => {
     index++;
     card.classList.remove('out');
     if (index >= deck.length) return endGame();
-    if (opts.chapters && answeredInRound >= ROUND_SIZE) {
-      document.getElementById('pauseTitle').textContent = chapterTitle(round);
-      show('pause');
-      return;
-    }
     renderCard();
   }, 170);
 }
@@ -1646,14 +1389,10 @@ function skipQuestion() {
 }
 
 function endGame() {
-  document.getElementById('endText').textContent =
-    (opts.names ? names[0] + ' & ' + names[1] + ', vous' : 'Vous') +
-    ' vous connaissez déjà beaucoup mieux. La suite se passe sans téléphone…';
   show('end');
 }
 
 renderPacks();
-renderOpts();
 
 /* ============ Installation sur l'écran d'accueil (PWA) ============
    Chrome/Android ne propose l'installation que si la page a un

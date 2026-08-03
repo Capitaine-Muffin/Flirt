@@ -4,6 +4,14 @@
 
 (rien pour l'instant)
 
+## [0.6.0] — 2026-08-03
+
+- Version finale simplifiée : le jeu se joue sans prénoms et sans
+  chapitres — les cartes défilent en continu jusqu'à épuisement des
+  questions (app + démo web).
+- L'écran « Réglages » (interrupteurs Prénoms & Chapitres) et l'écran
+  « Donner ton avis » disparaissent de la démo web.
+
 ## [0.5.5] — 2026-07-31
 
 - Par défaut, prénoms et chapitres sont désactivés (activables dans les
