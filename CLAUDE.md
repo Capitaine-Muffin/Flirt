@@ -11,10 +11,20 @@ Réponses **courtes**. Va droit au but.
 - Pas de « pour aller plus loin », pas de suggestions non sollicitées.
 - Si une question a une réponse en une ligne, réponds en une ligne.
 
+## Suivi du travail
+
+Ce qui reste à faire va dans les **issues GitHub** du dépôt, pas seulement dans
+la réponse.
+
+- Une issue par tâche, en français, avec des cases à cocher pour les étapes.
+- Regarder les issues existantes avant d'en créer : pas de doublon.
+- Citer les issues liées par leur numéro (`#27`) plutôt que de répéter le contenu.
+
 ## À savoir sur le projet
 
 - Toutes les chaînes sont en dur en français dans le JSX, il n'y a pas d'i18n.
-- Les textes existent en double : l'app (`src/screens/`) et la démo web publiée
-  (page HTML autonome, hors dépôt). Modifier un texte = le modifier aux deux endroits.
-- `src/services/ads.ts` et `src/services/purchases.ts` sont des mocks, pas de SDK natif.
-  L'app tourne donc dans Expo Go sans build.
+- Les textes existent en double : l'app (`src/screens/`) et la démo web
+  (`docs/index.html`, page HTML autonome). Modifier un texte = le modifier aux
+  deux endroits.
+- Aucun SDK natif tiers : ni publicité, ni achats in-app. L'app tourne donc dans
+  Expo Go sans build.
