@@ -1,9 +1,12 @@
 /**
- * État global de l'app : achats débloqués, persistance.
+ * État global de l'app : accès aux packs de questions.
  *
- * Tout est sauvegardé dans AsyncStorage pour que l'app se souvienne des
- * achats d'une session à l'autre (les achats réels sont en plus
- * restaurables via le store — voir services/purchases.ts).
+ * Version 1.0 : l'app est entièrement gratuite et sans publicité. Les
+ * packs marqués `premium` ne sont pas encore achetables — ils sont
+ * annoncés « bientôt » dans l'écran dédié. Les achats validés seront
+ * mémorisés ici (AsyncStorage) quand Play Billing sera branché ; la
+ * lecture est déjà en place pour qu'une future mise à jour retrouve les
+ * packs débloqués sans migration.
  */
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, {
@@ -19,19 +22,14 @@ import { PACKS, PRODUCT_IDS } from '../data/questions';
 const STORAGE_KEY = 'flirt/state/v1';
 
 interface PersistedState {
-  /** productIds achetés (packs, premium, bundle). */
+  /** productIds débloqués (packs, bundle). Vide tant que les achats n'existent pas. */
   purchases: string[];
 }
 
 interface AppContextValue {
   ready: boolean;
-  /** Premium = plus aucune publicité. */
-  isPremium: boolean;
-  /** Un pack est-il jouable (gratuit ou acheté) ? */
+  /** Un pack est-il jouable (gratuit ou débloqué) ? */
   isPackUnlocked: (packId: string) => boolean;
-  /** Enregistre un achat validé (appelé par la boutique). */
-  registerPurchase: (productId: string) => void;
-  registerPurchases: (productIds: string[]) => void;
 }
 
 const AppContext = createContext<AppContextValue | null>(null);
@@ -51,26 +49,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
       .finally(() => setReady(true));
   }, []);
 
-  const persist = useCallback((next: PersistedState) => {
-    setState(next);
-    AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(next)).catch(() => {});
-  }, []);
-
-  const registerPurchases = useCallback(
-    (productIds: string[]) => {
-      const purchases = Array.from(new Set([...state.purchases, ...productIds]));
-      persist({ ...state, purchases });
-    },
-    [persist, state],
-  );
-
-  const registerPurchase = useCallback(
-    (productId: string) => registerPurchases([productId]),
-    [registerPurchases],
-  );
-
   const hasBundle = state.purchases.includes(PRODUCT_IDS.BUNDLE_ALL);
-  const isPremium = hasBundle || state.purchases.includes(PRODUCT_IDS.PREMIUM_LIFETIME);
 
   const isPackUnlocked = useCallback(
     (packId: string) => {
@@ -83,16 +62,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     [hasBundle, state.purchases],
   );
 
-  const value = useMemo(
-    () => ({
-      ready,
-      isPremium,
-      isPackUnlocked,
-      registerPurchase,
-      registerPurchases,
-    }),
-    [ready, isPremium, isPackUnlocked, registerPurchase, registerPurchases],
-  );
+  const value = useMemo(() => ({ ready, isPackUnlocked }), [ready, isPackUnlocked]);
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;
 }

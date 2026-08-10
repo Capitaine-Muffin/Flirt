@@ -35,41 +35,42 @@ entre soi et la conversation démarre toute seule.
 | 😄 Fun & Léger (30 q.) | 🌶️ | Gratuit |
 | ⚖️ Tu préfères… (30 q.) | 🌶️ | Gratuit |
 | ✈️ Voyages & Rêves (30 q.) | 🌶️🌶️ | Gratuit |
-| 💖 Cœur à Cœur (150 q.) | 🌶️🌶️ | 0,99 € |
-| 🔥 Un peu Hot (150 q.) | 🌶️🌶️🌶️ | 0,99 € |
-| 😈 Vraiment Hot (150 q.) | 🌶️🌶️🌶️ | 0,99 € |
-| 🤔 Dilemmes & Débats (150 q.) | 🌶️🌶️ | 0,99 € |
-| 💍 Couple Confirmé (150 q.) | 🌶️🌶️ | 0,99 € |
+| 💖 Cœur à Cœur (150 q.) | 🌶️🌶️ | Bientôt |
+| 🔥 Un peu Hot (150 q.) | 🌶️🌶️🌶️ | Bientôt |
+| 😈 Vraiment Hot (150 q.) | 🌶️🌶️🌶️ | Bientôt |
+| 🤔 Dilemmes & Débats (150 q.) | 🌶️🌶️ | Bientôt |
+| 💍 Couple Confirmé (150 q.) | 🌶️🌶️ | Bientôt |
 
-Soit **870 questions** au total : 120 gratuites et 750 premium.
+Soit **870 questions** écrites : 120 jouables dans la version 1.0, et 750
+qui arriveront avec la mise à jour de monétisation.
 
 Les questions vivent dans `src/data/questions.ts` — en ajouter un pack se
 fait en quelques lignes, sans toucher au reste du code.
 
 ## 💰 Modèle économique
 
-Pas d'abonnement récurrent : des **achats uniques**, faciles à accepter en
-caisse.
+**Version 1.0 (première sortie) : tout est gratuit, sans publicité et
+sans achat.** L'objectif est d'être en ligne, d'avoir de vrais
+utilisateurs et les premiers avis. Les packs plus intenses sont annoncés
+« bientôt » dans l'app, sans prix affiché tant que les produits n'existent
+pas.
 
-| Produit | ID produit | Prix de lancement |
+**Mise à jour suivante : la monétisation.** Achats uniques, pas
+d'abonnement.
+
+| Produit | ID produit | Prix visé |
 |---|---|---|
 | Pack de questions (×5, 150 q. chacun) | `flirt_pack_*` | 0,99 € |
-| ✨ Premium à vie (sans pub) | `flirt_premium_lifetime` | 2,99 € |
-| 💝 Bundle « Tout Flirt » | `flirt_bundle_tout` | 4,99 € |
+| 💝 Bundle « Tout Flirt » | `flirt_bundle_tout` | 3,99 € |
 
-**Stratégie de lancement** : prix volontairement bas (0,99 € = achat
-impulsif sous le seuil de réflexion) pour maximiser le volume et les avis
-au démarrage. L'escalier reste cohérent : 0,99 € le pack → 2,99 € sans
-pub → 4,99 € tout débloqué (valeur unitaire 7,94 €, ~37 % de remise).
-Une fois la base d'utilisateurs installée, les prix peuvent remonter
-(packs à 1,99 €) directement depuis App Store Connect / Play Console,
-sans mise à jour de l'app.
+Prix volontairement bas (0,99 € = achat impulsif sous le seuil de
+réflexion) pour maximiser le volume au démarrage ; ils pourront remonter
+depuis la Play Console sans mise à jour de l'app.
 
-**Règle d'or : la pub ne coupe jamais rien.** Aucun interstitiel, aucune
-vidéo, aucun plein écran — l'app doit rester chic même en version
-gratuite. Uniquement des bannières discrètes : accueil, boutique, et une
-bannière fine sous la carte pendant le jeu. Toutes disparaissent
-définitivement avec le Premium (2,99 €), qui reste l'argument de vente.
+**Sur la publicité** : il n'y en a aucune, et c'est un argument de vente à
+part entière (« sans pub, sans compte »). Si elle revenait un jour, la
+règle d'or resterait qu'elle ne coupe jamais rien — jamais
+d'interstitiel, jamais de vidéo.
 
 ## 🛠️ Stack technique
 
@@ -83,11 +84,9 @@ définitivement avec le Premium (2,99 €), qui reste l'argument de vente.
 ```
 src/
   data/questions.ts      # Les packs de questions (le contenu du jeu)
-  state/AppContext.tsx   # État global persisté (prénoms, achats)
-  services/purchases.ts  # Achats in-app (mock ; RevenueCat en prod)
-  services/ads.ts        # Publicité (règles + intégration AdMob)
-  components/            # Button, PackCard, AdBanner
-  screens/               # Home, Setup, Game, Shop
+  state/AppContext.tsx   # État global persisté (packs débloqués)
+  components/            # Button, PackCard
+  screens/               # Home, Setup, Game, Shop (« Bientôt »)
 ```
 
 ## 🚀 Lancer en développement
@@ -99,27 +98,26 @@ npm start          # puis scanner le QR code avec Expo Go
 
 ## 📲 Publier sur les stores
 
-1. **Comptes développeur** : Apple Developer (99 $/an) et Google Play
-   Console (25 $ une fois). Adapter `bundleIdentifier` / `package` dans
-   `app.json` si besoin (actuellement `com.flirtgame.app`).
-2. **Icônes & splash** : remplacer les images du dossier `assets/`.
-3. **Achats in-app** : créer les produits listés ci-dessus dans App Store
-   Connect et Play Console, puis brancher
-   [RevenueCat](https://www.revenuecat.com/) dans
-   `src/services/purchases.ts` (les instructions détaillées sont en
-   commentaire dans le fichier — le mock actuel simule les achats pour le
-   développement).
-4. **Publicité** : créer une app AdMob, puis suivre les instructions en
-   commentaire dans `src/services/ads.ts` et `src/components/AdBanner.tsx`.
-5. **Build & soumission** avec EAS :
+**Google Play** : la marche à suivre complète est dans
+[`docs/PLAY_STORE.md`](docs/PLAY_STORE.md) — compte développeur, textes de
+la fiche, formulaires (sécurité des données, classification), visuels et
+commandes EAS. La politique de confidentialité à héberger est
+[`docs/confidentialite.html`](docs/confidentialite.html).
+
+En résumé :
 
 ```bash
 npm install -g eas-cli
 eas login
-eas build --platform all      # builds iOS + Android
-eas submit --platform ios
-eas submit --platform android
+eas build --platform android --profile preview      # APK de test
+eas build --platform android --profile production   # .aab pour Play
 ```
+
+Penser à incrémenter `expo.android.versionCode` dans `app.json` à chaque
+envoi sur Play.
+
+**App Store** : à faire ensuite (compte Apple Developer à 99 $/an,
+`ios.buildNumber` à ajouter dans `app.json`).
 
 ## 🗺️ Pistes pour la suite
 

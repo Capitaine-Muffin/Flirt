@@ -18,6 +18,10 @@ expo-env.d.ts
 *.key
 *.mobileprovision
 
+# Clés de publication (ne jamais committer)
+play-service-account.json
+google-play-*.json
+
 # Metro
 .metro-health-check*
 

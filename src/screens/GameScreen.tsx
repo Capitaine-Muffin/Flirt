@@ -3,15 +3,14 @@
  *
  * Une question à la fois, en plein écran. Les cartes défilent en
  * continu, sans pause ni compteur : une carte, une question, et les
- * joueurs décident qui répond. Zéro publicité ici : rien ne doit
- * casser le rythme de la conversation. On peut passer une question
- * qui ne convient pas, et rejouer à l'infini.
+ * joueurs décident qui répond. Rien ne doit casser le rythme de la
+ * conversation. On peut passer une question qui ne convient pas, et
+ * rejouer à l'infini.
  */
 import * as Haptics from 'expo-haptics';
 import React, { useRef, useState } from 'react';
 import { Animated, Pressable, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import AdBanner from '../components/AdBanner';
 import Button from '../components/Button';
 import { PACKS, questionText } from '../data/questions';
 import { ScreenProps } from '../navigation';
@@ -88,7 +87,6 @@ export default function GameScreen({ navigation, route }: ScreenProps<'Game'>) {
             style={styles.endButton}
           />
         </View>
-        <AdBanner compact />
       </SafeAreaView>
     );
   }
@@ -120,7 +118,6 @@ export default function GameScreen({ navigation, route }: ScreenProps<'Game'>) {
           style={styles.footerButton}
         />
       </View>
-      <AdBanner compact />
     </SafeAreaView>
   );
 }

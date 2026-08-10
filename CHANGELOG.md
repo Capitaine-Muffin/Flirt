@@ -4,6 +4,23 @@
 
 (rien pour l'instant)
 
+## [1.0.0] — 2026-08-10
+
+Première version destinée à Google Play : l'app est entièrement gratuite,
+sans compte et sans publicité.
+
+- La publicité disparaît complètement de l'app (bannières d'accueil, de
+  boutique et de jeu). Il n'y avait que des emplacements simulés, aucun
+  vrai réseau publicitaire n'a jamais été branché.
+- La boutique laisse place à un écran « Bientôt » : les cinq packs plus
+  intenses y sont présentés sans prix ni bouton d'achat, tant que les
+  achats in-app ne sont pas réellement en place. Plus rien ne simule un
+  paiement.
+- Ajout de la configuration de publication : `eas.json` (profils de build
+  et de soumission), `versionCode` Android, politique de confidentialité
+  (`docs/confidentialite.html`) et marche à suivre complète pour la Play
+  Console (`docs/PLAY_STORE.md`).
+
 ## [0.6.0] — 2026-08-03
 
 - Version finale simplifiée : le jeu se joue sans prénoms et sans

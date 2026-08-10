@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Flirt — visuel de mise en avant 1024×500</title>
+<style>
+  body {
+    margin: 0;
+    background: #0b060d;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  }
+  /* Format exigé par Google Play : exactement 1024 × 500 px.
+     Capturer uniquement cette zone (clic droit → capturer le nœud, ou
+     l'outil « Capture node screenshot » des DevTools Chrome). */
+  .graphic {
+    width: 1024px;
+    height: 500px;
+    background:
+      radial-gradient(900px 420px at 78% 18%, rgba(255, 79, 123, 0.28), transparent 62%),
+      radial-gradient(700px 500px at 12% 92%, rgba(247, 200, 115, 0.12), transparent 60%),
+      #160B1A;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    position: relative;
+  }
+  .title {
+    color: #FFF4F7;
+    font-size: 132px;
+    font-weight: 900;
+    letter-spacing: 14px;
+    margin: 0;
+    line-height: 1;
+    text-indent: 14px;
+  }
+  .dot { color: #FF4F7B; }
+  .tagline {
+    color: #B99BAE;
+    font-size: 30px;
+    margin-top: 26px;
+    letter-spacing: 1px;
+  }
+  .badges {
+    display: flex;
+    gap: 14px;
+    margin-top: 40px;
+  }
+  .badge {
+    color: #FFF4F7;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid #331B3A;
+    border-radius: 999px;
+    padding: 10px 22px;
+    font-size: 19px;
+  }
+</style>
+</head>
+<body>
+  <div class="graphic">
+    <h1 class="title">Flirt<span class="dot">.</span></h1>
+    <div class="tagline">Se découvrir, tout simplement.</div>
+    <div class="badges">
+      <span class="badge">120 questions</span>
+      <span class="badge">Sans pub</span>
+      <span class="badge">Sans compte</span>
+    </div>
+  </div>
+</body>
+</html>

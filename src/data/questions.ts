@@ -3,8 +3,8 @@
  *
  * Chaque pack a un identifiant stable (utilisé pour les achats in-app et la
  * sauvegarde locale), un niveau d'intensité indicatif et une liste de
- * questions. Les packs `premium: true` sont verrouillés tant qu'ils n'ont
- * pas été achetés (voir src/services/purchases.ts).
+ * questions. Les packs `premium: true` ne sont pas encore disponibles :
+ * ils sont annoncés « bientôt » dans l'app (voir ShopScreen).
  *
  * Mécanique « Mix » : chaque pack mélange des questions solo (une chaîne
  * de caractères — une personne répond, en alternance) et des questions
@@ -1003,11 +1003,13 @@ export const PACKS: QuestionPack[] = [
   },
 ];
 
-/** Identifiants produits pour la monétisation (voir services/purchases.ts). */
+/**
+ * Identifiants produits réservés pour la monétisation à venir. Aucun
+ * achat n'est proposé en version 1.0 ; ces identifiants sont ceux qui
+ * seront déclarés dans la Play Console le jour venu.
+ */
 export const PRODUCT_IDS = {
-  /** Achat unique « à vie » : supprime toutes les publicités. */
-  PREMIUM_LIFETIME: 'flirt_premium_lifetime',
-  /** Bundle : premium à vie + tous les packs de questions. */
+  /** Bundle : tous les packs de questions d'un coup. */
   BUNDLE_ALL: 'flirt_bundle_tout',
 } as const;
 

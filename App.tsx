@@ -45,7 +45,7 @@ export default function App() {
             component={GameScreen}
             options={{ title: '', headerTransparent: true }}
           />
-          <Stack.Screen name="Shop" component={ShopScreen} options={{ title: 'Boutique' }} />
+          <Stack.Screen name="Shop" component={ShopScreen} options={{ title: 'Bientôt' }} />
         </Stack.Navigator>
       </NavigationContainer>
     </AppProvider>
