@@ -90,6 +90,8 @@ Console, dans la demande D-U-N-S et dans la politique de confidentialité
 | Immatriculation | 02/11/2021 |
 | Représentant légal | Romain Guaresi, président |
 | État | en activité |
+| Compte propriétaire (interne) | `admin.capitainemuffin@proton.me` |
+| Contact public | `contact@capitainemuffin.com` |
 
 Forme juridique et code APE à confirmer sur le Kbis avant saisie.
 
@@ -99,16 +101,20 @@ qui doit figurer comme contact du compte.
 
 ### 0.4 Créer le compte
 
-1. Aller sur https://play.google.com/console avec le compte Google qui
-   servira de propriétaire (utiliser une adresse pérenne, pas une adresse
-   personnelle jetable — elle ne peut pas être changée facilement).
+1. Aller sur https://play.google.com/console **connecté avec
+   `admin.capitainemuffin@proton.me`** : ce compte devient propriétaire du
+   compte développeur, et le changer ensuite passe par une procédure de
+   transfert chez Google. Jamais un compte Google personnel.
 2. Payer les **25 $ d'inscription** (une seule fois, à vie).
 3. Renseigner :
-   - type de compte : organisation / personnel (cf. 0.1) ;
+   - type de compte : **organisation** (cf. 0.1) ;
    - nom du développeur affiché publiquement : **Capitaine Muffin** ;
-   - adresse officielle et téléphone — les mêmes que dans la politique de
-     confidentialité (issue #27) ;
-   - adresse e-mail de contact publique, affichée sur la fiche Play.
+   - adresse officielle et téléphone — les mêmes qu'en 0.3 et que dans la
+     politique de confidentialité (issue #27) ;
+   - adresse e-mail de contact publique :
+     **`contact@capitainemuffin.com`** (l'adresse Proton reste interne).
+4. Activer la 2FA sur le compte propriétaire et ranger les codes de
+   secours ailleurs que sur un seul téléphone.
 
 ### 0.5 Vérification d'identité
 
