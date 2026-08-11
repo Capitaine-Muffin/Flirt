@@ -29,7 +29,11 @@ personnel coûte 14 jours de test fermé et 12 testeurs à trouver juste
 avant la sortie. **Conséquence du choix : l'issue #26 (12 testeurs) ne
 s'applique plus**, l'obligation ne visant que les comptes personnels.
 
-### 0.2 Le numéro D-U-N-S
+### 0.2 Le numéro D-U-N-S — ✅ obtenu : **277288992**
+
+Obtenu gratuitement via l'outil de recherche d'Apple (route 1 ci-dessous),
+au nom de Romain Guaresi pour CAPITAINE MUFFIN. La suite de cette section
+n'a plus qu'une valeur d'historique.
 
 Le D-U-N-S est un identifiant à 9 chiffres attribué gratuitement par
 Dun & Bradstreet à une entreprise — l'équivalent international du SIREN.
@@ -81,6 +85,7 @@ Console, dans la demande D-U-N-S et dans la politique de confidentialité
 | Dénomination | CAPITAINE MUFFIN |
 | SIREN | 904 880 473 |
 | SIRET (siège) | 904 880 473 00015 |
+| D-U-N-S | 277288992 |
 | Adresse du siège | 6 montée Desambrois, 06000 Nice, France |
 | Immatriculation | 02/11/2021 |
 | Représentant légal | Romain Guaresi, président |
