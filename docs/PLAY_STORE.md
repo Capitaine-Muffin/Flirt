@@ -35,12 +35,23 @@ Le D-U-N-S est un identifiant à 9 chiffres attribué gratuitement par
 Dun & Bradstreet à une entreprise — l'équivalent international du SIREN.
 Google l'utilise pour vérifier que la société existe.
 
-1. **Vérifier s'il existe déjà** : https://www.dnb.com/duns/lookup —
-   chercher la raison sociale exacte de Capitaine Muffin. Beaucoup de
-   sociétés françaises immatriculées en ont un sans le savoir.
-2. **Sinon, le demander** (gratuit) sur le même formulaire. Délai annoncé :
-   quelques jours à **30 jours**. C'est la raison pour laquelle cette
-   étape passe avant tout le reste.
+**En France, il est attribué automatiquement** par Altares (le partenaire
+français de Dun & Bradstreet) à toute société immatriculée au RCS ayant un
+SIRET. Capitaine Muffin en a donc très probablement déjà un — il s'agit de
+le retrouver, pas de le demander.
+
+1. **Le retrouver** — outil de recherche officiel D&B :
+   https://dunsnumberlookup.dnb.com (raison sociale + pays). Sinon,
+   demander son propre numéro gratuitement au service client d'Altares
+   depuis https://www.altares.com/fr/nos-data/duns-number/
+   ⚠️ Verif.com affiche bien le D-U-N-S mais dans un rapport payant
+   (~39 € HT) : inutile ici.
+2. **S'il n'existe vraiment pas**, le demander gratuitement à
+   Dun & Bradstreet. Délai annoncé : 5 à **30 jours** ouvrés. C'est la
+   raison pour laquelle cette étape passe avant tout le reste.
+3. Au moment de l'inscription, la Play Console affiche elle-même un lien
+   vers l'outil D&B : en cas de doute sur l'URL, partir de là
+   ([aide Google](https://support.google.com/googleplay/android-developer/answer/13628312)).
 
 Les informations déclarées (raison sociale, adresse, téléphone) doivent
 être **strictement identiques** à celles saisies ensuite dans la Play
