@@ -40,18 +40,30 @@ français de Dun & Bradstreet) à toute société immatriculée au RCS ayant un
 SIRET. Capitaine Muffin en a donc très probablement déjà un — il s'agit de
 le retrouver, pas de le demander.
 
-1. **Le retrouver** — outil de recherche officiel D&B :
-   https://dunsnumberlookup.dnb.com (raison sociale + pays). Sinon,
-   demander son propre numéro gratuitement au service client d'Altares
-   depuis https://www.altares.com/fr/nos-data/duns-number/
-   ⚠️ Verif.com affiche bien le D-U-N-S mais dans un rapport payant
-   (~39 € HT) : inutile ici.
-2. **S'il n'existe vraiment pas**, le demander gratuitement à
-   Dun & Bradstreet. Délai annoncé : 5 à **30 jours** ouvrés. C'est la
-   raison pour laquelle cette étape passe avant tout le reste.
-3. Au moment de l'inscription, la Play Console affiche elle-même un lien
-   vers l'outil D&B : en cas de doute sur l'URL, partir de là
-   ([aide Google](https://support.google.com/googleplay/android-developer/answer/13628312)).
+**Le piège** : sur l'outil de recherche officiel
+https://dunsnumberlookup.dnb.com, choisir « France » redirige vers Altares
+et débouche sur une offre payante (Verif.com, ~39 € HT le rapport). Le
+numéro, lui, est gratuit. Trois routes qui contournent ça :
+
+1. **L'outil de recherche d'Apple**
+   (https://developer.apple.com/enroll/duns-lookup/) — gratuit, couvre la
+   France, demande seulement un identifiant Apple (gratuit lui aussi).
+   Saisir raison sociale + adresse ; le numéro arrive par e-mail. C'est la
+   route la plus rapide, et elle resservira pour l'App Store (issue #38).
+2. **Le formulaire D&B dans une autre langue** : passer par une locale
+   non française, par exemple https://dunsnumberlookup.dnb.com/fr-ch,
+   chercher la société, puis demander l'envoi du numéro par e-mail.
+3. **Altares directement**, par téléphone ou par le formulaire de
+   https://www.altares.com/fr/nos-data/duns-number/ : donner raison
+   sociale, adresse du siège et SIRET, et demander *son propre* numéro —
+   c'est gratuit. Délai constaté : 3 à 15 jours ouvrés.
+
+S'il n'existe vraiment pas, la création prend 5 à **30 jours** ouvrés :
+raison de plus pour lancer cette étape avant tout le reste.
+
+En cas de doute sur les URLs, la Play Console affiche elle-même un lien
+vers l'outil D&B au moment de l'inscription
+([aide Google](https://support.google.com/googleplay/android-developer/answer/13628312)).
 
 Les informations déclarées (raison sociale, adresse, téléphone) doivent
 être **strictement identiques** à celles saisies ensuite dans la Play
