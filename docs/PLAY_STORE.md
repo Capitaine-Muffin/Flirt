@@ -58,7 +58,29 @@ Les informations déclarées (raison sociale, adresse, téléphone) doivent
 Console et dans la politique de confidentialité (issue #27) — la moindre
 divergence fait échouer la vérification.
 
-### 0.3 Créer le compte
+### 0.3 Identité de la société (à recopier tel quel)
+
+Données publiques du registre — à saisir **à l'identique** dans la Play
+Console, dans la demande D-U-N-S et dans la politique de confidentialité
+(issue #27) :
+
+| Champ | Valeur |
+|---|---|
+| Dénomination | CAPITAINE MUFFIN |
+| SIREN | 904 880 473 |
+| SIRET (siège) | 904 880 473 00015 |
+| Adresse du siège | 6 montée Desambrois, 06000 Nice, France |
+| Immatriculation | 02/11/2021 |
+| Représentant légal | Romain Guaresi, président |
+| État | en activité |
+
+Forme juridique et code APE à confirmer sur le Kbis avant saisie.
+
+⚠️ La vérification d'identité Google porte sur le **représentant légal** :
+c'est la pièce d'identité de Romain qui sera demandée, et c'est son nom
+qui doit figurer comme contact du compte.
+
+### 0.4 Créer le compte
 
 1. Aller sur https://play.google.com/console avec le compte Google qui
    servira de propriétaire (utiliser une adresse pérenne, pas une adresse
@@ -71,14 +93,14 @@ divergence fait échouer la vérification.
      confidentialité (issue #27) ;
    - adresse e-mail de contact publique, affichée sur la fiche Play.
 
-### 0.4 Vérification d'identité
+### 0.5 Vérification d'identité
 
-Google demande ensuite les pièces justificatives (0.1) et vérifie
+Google demande ensuite les pièces justificatives (0.3) et vérifie
 l'adresse et le téléphone. Répondre vite : chaque aller-retour rallonge
 le délai. Le statut est suivi dans **Play Console → Paramètres → Détails
 du compte de développeur**.
 
-### 0.5 Une fois le compte validé
+### 0.6 Une fois le compte validé
 
 - Ajouter les autres membres : **Utilisateurs et autorisations** →
   inviter, rôle *Admin* ou *Développeur*.
