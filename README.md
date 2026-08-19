@@ -84,10 +84,12 @@ définitivement avec le Premium (2,99 €), qui reste l'argument de vente.
 src/
   data/questions.ts      # Les packs de questions (le contenu du jeu)
   state/AppContext.tsx   # État global persisté (prénoms, achats)
-  services/purchases.ts  # Achats in-app (mock ; RevenueCat en prod)
+  config/monetization.ts # Identifiants produits, droits, clés RevenueCat
+  services/purchases.ts  # Achats in-app (simulation ou RevenueCat)
   services/ads.ts        # Publicité (règles + intégration AdMob)
   components/            # Button, PackCard, AdBanner
   screens/               # Home, Setup, Game, Shop
+server/                  # Backend facultatif : webhooks et vérification Play
 ```
 
 ## 🚀 Lancer en développement
@@ -103,12 +105,10 @@ npm start          # puis scanner le QR code avec Expo Go
    Console (25 $ une fois). Adapter `bundleIdentifier` / `package` dans
    `app.json` si besoin (actuellement `com.flirtgame.app`).
 2. **Icônes & splash** : remplacer les images du dossier `assets/`.
-3. **Achats in-app** : créer les produits listés ci-dessus dans App Store
-   Connect et Play Console, puis brancher
-   [RevenueCat](https://www.revenuecat.com/) dans
-   `src/services/purchases.ts` (les instructions détaillées sont en
-   commentaire dans le fichier — le mock actuel simule les achats pour le
-   développement).
+3. **Achats in-app** : tout le code est prêt — il reste à créer les
+   produits dans la Play Console et à fournir une clé RevenueCat. Marche à
+   suivre complète, et ce qui doit être décidé **avant** le premier envoi :
+   [`docs/ACHATS_INTEGRES.md`](docs/ACHATS_INTEGRES.md).
 4. **Publicité** : créer une app AdMob, puis suivre les instructions en
    commentaire dans `src/services/ads.ts` et `src/components/AdBanner.tsx`.
 5. **Build & soumission** avec EAS :
