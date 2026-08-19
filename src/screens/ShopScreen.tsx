@@ -3,7 +3,7 @@
  * Les achats passent par src/services/purchases.ts (mock en dev,
  * RevenueCat en production).
  */
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Alert, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import AdBanner from '../components/AdBanner';
@@ -11,28 +11,45 @@ import Button from '../components/Button';
 import { PACKS, PREMIUM_PACKS, PRODUCT_IDS } from '../data/questions';
 import { ScreenProps } from '../navigation';
 import {
-  MOCK_PRICE_CENTS,
   getDisplayPrice,
+  getPriceCents,
   purchaseProduct,
+  refreshPrices,
   restorePurchases,
 } from '../services/purchases';
 import { useApp } from '../state/AppContext';
 import { colors, font, radius, spacing } from '../theme';
 
 export default function ShopScreen(_props: ScreenProps<'Shop'>) {
-  const { isPremium, isPackUnlocked, registerPurchase, registerPurchases } = useApp();
+  const { isPremium, isPackUnlocked, registerPurchases } = useApp();
   const [busyProduct, setBusyProduct] = useState<string | null>(null);
+  const [, setPricesVersion] = useState(0);
+
+  // Les prix localisés arrivent du store de façon asynchrone : on redessine
+  // la boutique quand ils sont là.
+  useEffect(() => {
+    let cancelled = false;
+    refreshPrices().then(() => {
+      if (!cancelled) setPricesVersion((v) => v + 1);
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   const buy = async (productId: string) => {
     setBusyProduct(productId);
     try {
       const result = await purchaseProduct(productId);
       if (result.success) {
-        registerPurchase(productId);
+        // Le store fait foi : un bundle débloque aussi les packs inclus.
+        registerPurchases(result.ownedProductIds ?? [productId]);
         Alert.alert('Merci ! 💘', 'Votre achat a bien été débloqué.');
       } else if (result.error) {
         Alert.alert('Achat impossible', result.error);
       }
+      // Annulation : l'utilisateur a fermé la feuille de paiement, on ne
+      // lui met pas une alerte de plus sous le nez.
     } finally {
       setBusyProduct(null);
     }
@@ -61,10 +78,10 @@ export default function ShopScreen(_props: ScreenProps<'Shop'>) {
   // l'utilisateur des packs qu'il possède déjà).
   const missingValueCents =
     PREMIUM_PACKS.filter((p) => !isPackUnlocked(p.id)).reduce(
-      (sum, p) => sum + (MOCK_PRICE_CENTS[p.productId!] ?? 0),
+      (sum, p) => sum + getPriceCents(p.productId!),
       0,
-    ) + (isPremium ? 0 : MOCK_PRICE_CENTS[PRODUCT_IDS.PREMIUM_LIFETIME]);
-  const bundleWorthIt = missingValueCents > MOCK_PRICE_CENTS[PRODUCT_IDS.BUNDLE_ALL];
+    ) + (isPremium ? 0 : getPriceCents(PRODUCT_IDS.PREMIUM_LIFETIME));
+  const bundleWorthIt = missingValueCents > getPriceCents(PRODUCT_IDS.BUNDLE_ALL);
 
   return (
     <SafeAreaView style={styles.safe} edges={['bottom']}>

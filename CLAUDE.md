@@ -16,5 +16,11 @@ Réponses **courtes**. Va droit au but.
 - Toutes les chaînes sont en dur en français dans le JSX, il n'y a pas d'i18n.
 - Les textes existent en double : l'app (`src/screens/`) et la démo web publiée
   (page HTML autonome, hors dépôt). Modifier un texte = le modifier aux deux endroits.
-- `src/services/ads.ts` et `src/services/purchases.ts` sont des mocks, pas de SDK natif.
-  L'app tourne donc dans Expo Go sans build.
+- `src/services/ads.ts` suit le même principe que les achats : cadre de
+  simulation sans SDK natif (Expo Go), vraies bannières AdMob dans un build EAS.
+  `app.config.js` n'ajoute le plugin que si un App ID est fourni.
+- `src/services/purchases.ts` bascule tout seul : simulation tant qu'il n'y a ni
+  module natif ni clé RevenueCat (Expo Go), vrais paiements dans un build EAS.
+  L'app tourne donc toujours dans Expo Go sans build.
+- `server/` est un backend facultatif (webhooks RevenueCat), sans dépendances,
+  testé avec `node --test`. Voir `docs/ACHATS_INTEGRES.md`.

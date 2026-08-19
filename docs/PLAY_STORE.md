@@ -130,12 +130,19 @@ du compte de développeur**.
 - Créer l'application : **Toutes les applications → Créer une
   application**.
   - Nom : `Flirt — Jeu de questions` (modifiable ensuite, cf. issue #30)
+  - Nom du package : **`com.flirtgame.app`** — celui de `app.json`, et
+    **il est définitif**
   - Langue par défaut : français (France)
   - Type : **Application**, catégorie *Style de vie* — pas « Jeu », et
     surtout pas « Rencontres » (cf. issue #30)
-  - Gratuite, avec achats intégrés
-- Vérifier que le nom de package `com.flirtgame.app` (dans `app.json`)
-  est bien celui utilisé au premier envoi : **il est définitif**.
+  - **Gratuite**, avec achats intégrés — une app publiée gratuite ne peut
+    jamais devenir payante
+- ⚠️ Avant de créer les produits payants, lire
+  [`ACHATS_INTEGRES.md`](ACHATS_INTEGRES.md) : la page « Produits intégrés »
+  ne s'ouvre qu'après l'envoi d'un `.aab` contenant la bibliothèque de
+  facturation. Le premier build doit donc déjà l'embarquer.
+- ⚠️ Même contrainte pour la publicité, l'App ID AdMob devant être dans le
+  manifeste au moment du build : [`PUBLICITE.md`](PUBLICITE.md).
 
 ---
 
@@ -154,5 +161,7 @@ correspondante.
 | Textes de la fiche Play | #30 |
 | Formulaires (sécurité des données, publicité, classification, public cible) | #31 |
 | Test sur un vrai téléphone (build EAS preview) | #32 |
+| Achats intégrés : préparation ([`ACHATS_INTEGRES.md`](ACHATS_INTEGRES.md)) | #37 |
+| Publicité : préparation ([`PUBLICITE.md`](PUBLICITE.md)) | #41 |
 | Premier `.aab` en test fermé | #33 |
 | Accès à la production et publication de la 1.0.0 | #34 |

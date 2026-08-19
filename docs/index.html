@@ -1231,8 +1231,10 @@ function show(id) {
 }
 
 /* ============ Boutique (achats simulés) ============
-   Mêmes offres que ShopScreen.tsx : Premium à vie 4,99 €, packs 1,99 €,
-   bundle « Tout Flirt » 9,99 € (premium + tous les packs). */
+   Mêmes offres que ShopScreen.tsx : Premium à vie 2,99 €, packs 0,99 €,
+   bundle « Tout Flirt » 4,99 € (premium + tous les packs). Ces prix sont
+   ceux du repli codé dans l'app ; en production, c'est la Play Console qui
+   fait foi (voir docs/ACHATS_INTEGRES.md). */
 const PRICES = { premium: '2,99 €', bundle: '4,99 €', pack: '0,99 €' };
 const CENTS = { premium: 299, bundle: 499, pack: 99 };
 const purchases = new Set();

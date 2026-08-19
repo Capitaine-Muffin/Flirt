@@ -1,0 +1,14 @@
+{
+  "name": "flirt-backend",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Backend des achats intégrés de Flirt : webhooks RevenueCat et vérification des achats Google Play.",
+  "type": "module",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "start": "node src/index.js",
+    "test": "node --test"
+  }
+}

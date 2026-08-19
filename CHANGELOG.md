@@ -2,7 +2,27 @@
 
 ## [Unreleased]
 
-(rien pour l'instant)
+- Achats intégrés prêts pour la production : l'app bascule toute seule entre
+  la simulation (Expo Go, aucun paiement réel) et les vrais paiements
+  Google Play / App Store dès qu'une clé RevenueCat est fournie au build.
+- Les prix affichés viennent désormais du store quand il répond (donc
+  localisés et modifiables sans mise à jour de l'app) ; les prix codés dans
+  l'app ne servent plus que de repli.
+- Au lancement, les achats sont revérifiés auprès du store : un achat se
+  retrouve après une réinstallation ou sur un nouveau téléphone.
+- Une annulation de paiement n'affiche plus de message d'erreur, et un
+  bundle débloque bien tout ce qu'il contient.
+- Nouveau dossier `server/` : backend facultatif qui reçoit les webhooks
+  RevenueCat et sait vérifier un achat auprès de Google Play.
+- Publicité prête pour la production sur le même principe : bannières
+  AdMob réelles dès que les identifiants sont fournis au build, cadre de
+  simulation le reste du temps. Le consentement RGPD (UMP) est demandé
+  avant toute annonce, et aucune bannière ne s'affiche s'il échoue.
+- Une bannière qui ne se charge pas ne laisse plus de cadre gris à sa
+  place, et les utilisateurs premium ne voient aucun formulaire de
+  consentement.
+- Nouveaux documents `docs/ACHATS_INTEGRES.md` et `docs/PUBLICITE.md` : ce
+  qui doit être décidé avant le premier envoi sur le Play Store.
 
 ## [0.6.0] — 2026-08-03
 
