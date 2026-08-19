@@ -141,6 +141,8 @@ du compte de développeur**.
   [`ACHATS_INTEGRES.md`](ACHATS_INTEGRES.md) : la page « Produits intégrés »
   ne s'ouvre qu'après l'envoi d'un `.aab` contenant la bibliothèque de
   facturation. Le premier build doit donc déjà l'embarquer.
+- ⚠️ Même contrainte pour la publicité, l'App ID AdMob devant être dans le
+  manifeste au moment du build : [`PUBLICITE.md`](PUBLICITE.md).
 
 ---
 
@@ -160,5 +162,6 @@ correspondante.
 | Formulaires (sécurité des données, publicité, classification, public cible) | #31 |
 | Test sur un vrai téléphone (build EAS preview) | #32 |
 | Achats intégrés : préparation ([`ACHATS_INTEGRES.md`](ACHATS_INTEGRES.md)) | #37 |
+| Publicité : préparation ([`PUBLICITE.md`](PUBLICITE.md)) | #41 |
 | Premier `.aab` en test fermé | #33 |
 | Accès à la production et publication de la 1.0.0 | #34 |

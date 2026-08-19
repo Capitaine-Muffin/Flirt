@@ -85,6 +85,7 @@ src/
   data/questions.ts      # Les packs de questions (le contenu du jeu)
   state/AppContext.tsx   # État global persisté (prénoms, achats)
   config/monetization.ts # Identifiants produits, droits, clés RevenueCat
+  config/ads.ts          # Blocs d'annonces AdMob
   services/purchases.ts  # Achats in-app (simulation ou RevenueCat)
   services/ads.ts        # Publicité (règles + intégration AdMob)
   components/            # Button, PackCard, AdBanner
@@ -109,8 +110,9 @@ npm start          # puis scanner le QR code avec Expo Go
    produits dans la Play Console et à fournir une clé RevenueCat. Marche à
    suivre complète, et ce qui doit être décidé **avant** le premier envoi :
    [`docs/ACHATS_INTEGRES.md`](docs/ACHATS_INTEGRES.md).
-4. **Publicité** : créer une app AdMob, puis suivre les instructions en
-   commentaire dans `src/services/ads.ts` et `src/components/AdBanner.tsx`.
+4. **Publicité** : le code est prêt lui aussi — il reste à créer le compte
+   AdMob et à fournir les identifiants au build :
+   [`docs/PUBLICITE.md`](docs/PUBLICITE.md).
 5. **Build & soumission** avec EAS :
 
 ```bash

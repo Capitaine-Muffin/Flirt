@@ -1,14 +1,15 @@
 // Configuration Metro.
 //
-// Seul ajout : `react-native-purchases` (les achats in-app) est facultatif.
-// Il n'est installé qu'au moment des builds EAS ; dans Expo Go, il n'est pas
-// là. Or Metro échoue à la compilation quand un `require` ne se résout pas —
-// un try/catch ne suffit pas, l'erreur arrive avant l'exécution. On le
-// remplace donc par un module vide tant qu'il n'est pas installé, et
-// src/services/purchases.ts retombe alors sur la simulation.
+// Seul ajout : les modules natifs de monétisation (achats in-app et
+// publicité) sont facultatifs. Ils ne sont installés qu'au moment des builds
+// EAS ; dans Expo Go, ils ne sont pas là. Or Metro échoue à la compilation
+// quand un `require` ne se résout pas — un try/catch ne suffit pas, l'erreur
+// arrive avant l'exécution. On les remplace donc par un module vide tant
+// qu'ils ne sont pas installés, et src/services/{purchases,ads}.ts retombent
+// alors sur la simulation.
 const { getDefaultConfig } = require('expo/metro-config');
 
-const OPTIONAL_MODULES = ['react-native-purchases'];
+const OPTIONAL_MODULES = ['react-native-purchases', 'react-native-google-mobile-ads'];
 
 const config = getDefaultConfig(__dirname);
 

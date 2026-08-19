@@ -14,8 +14,15 @@
   bundle débloque bien tout ce qu'il contient.
 - Nouveau dossier `server/` : backend facultatif qui reçoit les webhooks
   RevenueCat et sait vérifier un achat auprès de Google Play.
-- Nouveau document `docs/ACHATS_INTEGRES.md` : ce qui doit être décidé
-  avant le premier envoi sur le Play Store.
+- Publicité prête pour la production sur le même principe : bannières
+  AdMob réelles dès que les identifiants sont fournis au build, cadre de
+  simulation le reste du temps. Le consentement RGPD (UMP) est demandé
+  avant toute annonce, et aucune bannière ne s'affiche s'il échoue.
+- Une bannière qui ne se charge pas ne laisse plus de cadre gris à sa
+  place, et les utilisateurs premium ne voient aucun formulaire de
+  consentement.
+- Nouveaux documents `docs/ACHATS_INTEGRES.md` et `docs/PUBLICITE.md` : ce
+  qui doit être décidé avant le premier envoi sur le Play Store.
 
 ## [0.6.0] — 2026-08-03
 
