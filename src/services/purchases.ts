@@ -140,7 +140,18 @@ export function getPriceCents(productId: string): number {
 /** Lance le flux d'achat pour un produit. */
 export async function purchaseProduct(productId: string): Promise<PurchaseResult> {
   if (!live) {
-    // Simulation : achat toujours réussi, après un court délai.
+    // Une clé est configurée : ce build est censé facturer pour de vrai.
+    // Si l'initialisation a échoué (réseau, store indisponible), on refuse
+    // l'achat — offrir le produit gratuitement serait pire que l'erreur.
+    if (native.isSupported()) {
+      return {
+        success: false,
+        productId,
+        error: "Les achats sont momentanément indisponibles. Réessayez plus tard.",
+      };
+    }
+
+    // Aucune clé : build de développement, simulation assumée.
     await new Promise((resolve) => setTimeout(resolve, 600));
     return { success: true, productId, ownedProductIds: [productId] };
   }
