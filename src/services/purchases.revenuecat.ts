@@ -105,7 +105,7 @@ export async function fetchProducts(productIds: string[]): Promise<StoreProduct[
   try {
     const products = await loadNative().getProducts(productIds);
     return (products ?? []).map((p: any) => ({
-      productId: p.identifier,
+      productId: baseProductId(p.identifier),
       displayPrice: p.priceString,
       priceCents: Math.round((p.price ?? 0) * 100),
     }));
@@ -121,7 +121,9 @@ export async function purchase(productId: string): Promise<NativePurchaseOutcome
   const Purchases = loadNative();
   try {
     const products = await Purchases.getProducts([productId]);
-    const product = (products ?? []).find((p: any) => p.identifier === productId);
+    const product = (products ?? []).find(
+      (p: any) => baseProductId(p.identifier) === productId,
+    );
     if (!product) {
       return { status: 'error', error: "Ce produit n'est pas disponible sur votre compte." };
     }
@@ -170,13 +172,23 @@ function ownedFrom(customerInfo: any): string[] {
     for (const productId of ENTITLEMENTS[entitlementId] ?? []) owned.add(productId);
   }
   for (const productId of customerInfo?.allPurchasedProductIdentifiers ?? []) {
-    owned.add(productId);
+    owned.add(baseProductId(productId));
   }
   for (const tx of customerInfo?.nonSubscriptionTransactions ?? []) {
-    if (tx?.productIdentifier) owned.add(tx.productIdentifier);
+    if (tx?.productIdentifier) owned.add(baseProductId(tx.productIdentifier));
   }
 
   return [...owned];
+}
+
+/**
+ * L'identifiant produit seul, sans l'option d'achat que Play accole
+ * derrière deux points (`flirt_premium_lifetime:standard`). Le reste de
+ * l'app ne connaît que la partie de gauche : sans ce nettoyage, un achat
+ * réel ne serait pas reconnu et le joueur aurait payé pour rien.
+ */
+function baseProductId(identifier: string): string {
+  return identifier.split(':')[0];
 }
 
 /** Message d'erreur lisible, en français, à partir d'une erreur du SDK. */
