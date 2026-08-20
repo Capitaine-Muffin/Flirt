@@ -122,3 +122,24 @@ async function gatherConsent(ads: any): Promise<boolean> {
     return false;
   }
 }
+
+/**
+ * Rouvre le formulaire UMP pour que l'utilisateur modifie ou retire son
+ * consentement RGPD à tout moment (exigé par Google, pas seulement au
+ * premier lancement). Renvoie `false` quand ce n'est pas possible — SDK
+ * absent (Expo Go, démo web) ou aucun formulaire à proposer — et
+ * l'appelant affiche alors un message adapté plutôt qu'un formulaire.
+ */
+export async function openPrivacyOptionsForm(): Promise<boolean> {
+  const ads = getNativeAds();
+  const { AdsConsent } = ads ?? {};
+  if (!AdsConsent?.showPrivacyOptionsForm) return false;
+
+  try {
+    await AdsConsent.requestInfoUpdate();
+    await AdsConsent.showPrivacyOptionsForm();
+    return true;
+  } catch {
+    return false;
+  }
+}

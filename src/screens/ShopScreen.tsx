@@ -10,6 +10,7 @@ import AdBanner from '../components/AdBanner';
 import Button from '../components/Button';
 import { PACKS, PREMIUM_PACKS, PRODUCT_IDS } from '../data/questions';
 import { ScreenProps } from '../navigation';
+import { openPrivacyOptionsForm } from '../services/ads';
 import {
   getDisplayPrice,
   getPriceCents,
@@ -67,6 +68,16 @@ export default function ShopScreen(_props: ScreenProps<'Shop'>) {
       }
     } finally {
       setBusyProduct(null);
+    }
+  };
+
+  const openPrivacySettings = async () => {
+    const opened = await openPrivacyOptionsForm();
+    if (!opened) {
+      Alert.alert(
+        'Paramètres de confidentialité',
+        "Ce formulaire n'est disponible que dans l'application publiée, pas dans cet aperçu.",
+      );
     }
   };
 
@@ -163,6 +174,12 @@ export default function ShopScreen(_props: ScreenProps<'Shop'>) {
           onPress={restore}
           style={styles.restore}
         />
+        <Button
+          label="Paramètres de confidentialité"
+          variant="ghost"
+          onPress={openPrivacySettings}
+          style={styles.privacy}
+        />
       </ScrollView>
       <AdBanner />
     </SafeAreaView>
@@ -220,4 +237,5 @@ const styles = StyleSheet.create({
     marginLeft: spacing.sm,
   },
   restore: { marginTop: spacing.md },
+  privacy: { marginTop: spacing.xs },
 });
