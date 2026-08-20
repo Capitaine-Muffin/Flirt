@@ -106,22 +106,46 @@ async function gatherConsent(ads: any): Promise<boolean> {
   if (!AdsConsent) return true; // SDK sans module de consentement.
 
   try {
+    // En test, on trace l'état réel renvoyé par UMP : sans ça, un formulaire
+    // qui ne s'affiche pas est indiscernable d'un formulaire refusé. Le
+    // `reset` efface le choix mémorisé, sinon le premier lancement décide
+    // pour tous les suivants et le formulaire ne réapparaît jamais.
+    if (USE_TEST_ADS) {
+      AdsConsent.reset?.();
+      const before = await AdsConsent.requestInfoUpdate(consentOptions(ads));
+      console.log('[flirt] consentement UMP', JSON.stringify(before));
+    }
+
     // API récente : une seule fonction fait tout.
     if (typeof AdsConsent.gatherConsent === 'function') {
-      const info = await AdsConsent.gatherConsent();
+      const info = await AdsConsent.gatherConsent(consentOptions(ads));
+      if (USE_TEST_ADS) console.log('[flirt] après formulaire', JSON.stringify(info));
       return info?.canRequestAds ?? true;
     }
 
     // API plus ancienne : demander l'état, puis afficher le formulaire.
-    const info = await AdsConsent.requestInfoUpdate();
+    const info = await AdsConsent.requestInfoUpdate(consentOptions(ads));
     if (info?.isConsentFormAvailable && info?.status === AdsConsentStatus?.REQUIRED) {
       const result = await AdsConsent.showForm();
       return result?.status !== AdsConsentStatus?.REQUIRED;
     }
     return true;
-  } catch {
+  } catch (error) {
+    if (USE_TEST_ADS) console.log('[flirt] consentement en échec', String(error));
     return false;
   }
+}
+
+/**
+ * Options passées à UMP. En test, on fait croire au SDK que l'appareil est
+ * dans l'EEE : sans ça, un émulateur est géolocalisé hors Europe et le
+ * formulaire RGPD ne s'affiche jamais, impossible de le vérifier. En
+ * production, aucune option : la vraie géolocalisation s'applique.
+ */
+function consentOptions(ads: any): Record<string, unknown> | undefined {
+  if (!USE_TEST_ADS) return undefined;
+  const eea = ads.AdsConsentDebugGeography?.EEA ?? 1;
+  return { debugGeography: eea };
 }
 
 /**
