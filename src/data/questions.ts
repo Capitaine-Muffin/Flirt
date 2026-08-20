@@ -358,10 +358,10 @@ export const PACKS: QuestionPack[] = [
     ],
   },
   {
-    id: 'un-peu-hot',
-    title: 'Un peu Hot',
+    id: 'hot',
+    title: 'Hot',
     emoji: '🔥',
-    description: 'Pour faire monter la température… avec élégance.',
+    description: 'Des questions sensuelles pour faire monter la température.',
     intensity: 3,
     premium: true,
     productId: 'flirt_pack_hot',
@@ -516,17 +516,7 @@ export const PACKS: QuestionPack[] = [
       "Qu'est-ce que tu retiendras de moi en fermant les yeux ce soir ?",
       "Décris ce que tu ressens là, tout de suite, en trois mots.",
       { text: "On trinque à quoi, là, maintenant ?", duo: true },
-    ],
-  },
-  {
-    id: 'vraiment-hot',
-    title: 'Vraiment Hot',
-    emoji: '😈',
-    description: "Réservé aux soirées qui s'annoncent très bien.",
-    intensity: 3,
-    premium: true,
-    productId: 'flirt_pack_vraiment_hot',
-    questions: [
+      // Questions supplémentaires du pack Hot.
       "Qu'est-ce que tu portes quand tu veux vraiment séduire ?",
       { text: 'Plutôt lumière tamisée ou obscurité totale ?', duo: true },
       "Où aimes-tu le plus être embrassé·e ?",

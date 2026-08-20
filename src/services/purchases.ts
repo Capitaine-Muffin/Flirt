@@ -46,7 +46,6 @@ export const FALLBACK_PRICE_CENTS: Record<string, number> = {
   flirt_bundle_tout: 499,
   flirt_pack_coeur: 99,
   flirt_pack_hot: 99,
-  flirt_pack_vraiment_hot: 99,
   flirt_pack_dilemmes: 99,
   flirt_pack_couple: 99,
 };
@@ -56,7 +55,6 @@ export const FALLBACK_PRICES: Record<string, string> = {
   flirt_bundle_tout: '4,99 €',
   flirt_pack_coeur: '0,99 €',
   flirt_pack_hot: '0,99 €',
-  flirt_pack_vraiment_hot: '0,99 €',
   flirt_pack_dilemmes: '0,99 €',
   flirt_pack_couple: '0,99 €',
 };

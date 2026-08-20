@@ -7,10 +7,17 @@
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "dark",
     "backgroundColor": "#160B1A",
-    "splash": {
-      "backgroundColor": "#160B1A",
-      "resizeMode": "contain"
-    },
+    "plugins": [
+      [
+        "expo-splash-screen",
+        {
+          "backgroundColor": "#160B1A",
+          "image": "./assets/splash-icon.png",
+          "imageWidth": 200,
+          "resizeMode": "contain"
+        }
+      ]
+    ],
     "ios": {
       "supportsTablet": false,
       "bundleIdentifier": "com.flirtgame.app"
@@ -27,6 +34,12 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "extra": {
+      "eas": {
+        "projectId": "85d800d1-82e3-4427-a352-3b2cc4c944a1"
+      }
+    },
+    "owner": "professeur_reptile"
   }
 }

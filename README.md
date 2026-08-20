@@ -25,7 +25,7 @@ entre soi et la conversation démarre toute seule.
 - **On peut passer** une question qui ne convient pas (elle revient en fin
   de pioche, elle n'est pas perdue).
 - **Des thèmes gradués en intensité** (🌶️ → 🌶️🌶️🌶️) : du brise-glace au
-  « Un peu Hot », chacun choisit l'ambiance de la soirée.
+  « Hot », chacun choisit l'ambiance de la soirée.
 
 ## 📦 Les packs de questions
 
@@ -36,8 +36,7 @@ entre soi et la conversation démarre toute seule.
 | ⚖️ Tu préfères… (30 q.) | 🌶️ | Gratuit |
 | ✈️ Voyages & Rêves (30 q.) | 🌶️🌶️ | Gratuit |
 | 💖 Cœur à Cœur (150 q.) | 🌶️🌶️ | 0,99 € |
-| 🔥 Un peu Hot (150 q.) | 🌶️🌶️🌶️ | 0,99 € |
-| 😈 Vraiment Hot (150 q.) | 🌶️🌶️🌶️ | 0,99 € |
+| 🔥 Hot (300 q.) | 🌶️🌶️🌶️ | 0,99 € |
 | 🤔 Dilemmes & Débats (150 q.) | 🌶️🌶️ | 0,99 € |
 | 💍 Couple Confirmé (150 q.) | 🌶️🌶️ | 0,99 € |
 
@@ -53,7 +52,7 @@ caisse.
 
 | Produit | ID produit | Prix de lancement |
 |---|---|---|
-| Pack de questions (×5, 150 q. chacun) | `flirt_pack_*` | 0,99 € |
+| Pack de questions (×4, dont Hot avec 300 q.) | `flirt_pack_*` | 0,99 € |
 | ✨ Premium à vie (sans pub) | `flirt_premium_lifetime` | 2,99 € |
 | 💝 Bundle « Tout Flirt » | `flirt_bundle_tout` | 4,99 € |
 

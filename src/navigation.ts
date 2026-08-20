@@ -1,8 +1,8 @@
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 
 /**
- * Routes de l'app. Le jeu reçoit la liste des packs sélectionnés ; les
- * questions sont mélangées à l'entrée de l'écran.
+ * Routes de l'app. Le jeu reçoit le thème choisi ; ses questions sont
+ * mélangées à l'entrée de l'écran.
  */
 export type RootStackParamList = {
   Home: undefined;

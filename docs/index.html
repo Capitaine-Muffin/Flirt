@@ -112,20 +112,19 @@
     background: var(--surface);
     border: 2px solid transparent;
     border-radius: 16px;
-    padding: 13px 14px;
+    min-height: 128px;
+    padding: 20px;
     font-weight: 400;
   }
   .pack.selected { border-color: var(--primary); }
-  .pack .emoji { font-size: 28px; }
+  .pack .emoji { font-size: 42px; }
   .pack .info { flex: 1; }
-  .pack .title { font-weight: 700; font-size: 16px; display: flex; align-items: center; gap: 8px; }
+  .pack .title { font-weight: 700; font-size: 20px; display: flex; align-items: center; gap: 8px; }
   .badge {
     font-size: 10px; letter-spacing: 1px; text-transform: uppercase;
     color: var(--bg); background: var(--gold);
     border-radius: 999px; padding: 2px 8px; font-weight: 700;
   }
-  .pack .desc { color: var(--muted); font-size: 12.5px; margin-top: 2px; }
-  .pack .meta { color: var(--muted); font-size: 12px; margin-top: 3px; font-variant-numeric: tabular-nums; }
   .pack .tick { color: var(--primary); font-size: 20px; font-weight: 900; visibility: hidden; }
   .pack.selected .tick { visibility: visible; }
   .setup-footer {
@@ -203,8 +202,6 @@
   .shop-pack .emoji { font-size: 28px; }
   .shop-pack .info { flex: 1; display: flex; flex-direction: column; }
   .shop-pack .title { font-weight: 700; font-size: 15px; }
-  .shop-pack .desc { color: var(--muted); font-size: 12.5px; margin-top: 2px; }
-  .shop-pack .meta { color: var(--muted); font-size: 12px; margin-top: 3px; font-variant-numeric: tabular-nums; }
   .shop-pack .buy { padding: 9px 16px; font-size: 14px; background: var(--surface-light); white-space: nowrap; }
   .owned-tick { color: #6BE0A0; font-size: 20px; font-weight: 900; }
   .shop-note { color: var(--muted); font-size: 11.5px; text-align: center; padding: 8px 0 16px; }
@@ -240,8 +237,6 @@
     <div class="home-actions">
       <button class="primary" onclick="show('setup')">Commencer une partie</button>
       <button onclick="openShop('home')">Boutique · Premium &amp; Packs</button>
-      <button id="installBtn" hidden onclick="installApp()">📲 Installer sur l'écran d'accueil</button>
-      <div class="ad" id="iosHint" hidden>📲 Pour installer le jeu : touche le bouton Partager <span aria-hidden="true">⬆️</span> de Safari, puis « Sur l'écran d'accueil ».</div>
       <div class="ad" id="homeAd">Publicité — bannière discrète ici dans la version gratuite, jamais pendant la partie.</div>
     </div>
   </section>
@@ -257,7 +252,7 @@
     </div>
     <div class="offer offer-bundle">
       <div class="offer-title">💝 Tout Flirt</div>
-      <p class="offer-text">Premium à vie + les 5 packs de questions. La meilleure offre.</p>
+      <p class="offer-text">Premium à vie + les 4 packs de questions. La meilleure offre.</p>
       <div id="bundleOffer"></div>
     </div>
     <h2>Packs de questions</h2>
@@ -601,8 +596,8 @@ const PACKS = [
       { t: "Quelle chanson te ressemble le plus en ce moment ?", d: 1 },
       "Qu'aimerais-tu que les gens remarquent chez toi dès la première rencontre ?",
     ]},
-  { id: "un-peu-hot", title: "Un peu Hot", emoji: "🔥", premium: true, intensity: 3,
-    desc: "Pour faire monter la température… avec élégance.",
+  { id: "hot", title: "Hot", emoji: "🔥", premium: true, intensity: 3,
+    desc: "Des questions sensuelles pour faire monter la température.",
     q: [
       "Qu'est-ce qui t'a attiré·e chez moi en premier ?",
       "C'est quoi, ton idée du date parfait qui finit bien ?",
@@ -754,10 +749,7 @@ const PACKS = [
       "Qu'est-ce que tu retiendras de moi en fermant les yeux ce soir ?",
       "Décris ce que tu ressens là, tout de suite, en trois mots.",
       { t: "On trinque à quoi, là, maintenant ?", d: 1 },
-    ]},
-  { id: "vraiment-hot", title: "Vraiment Hot", emoji: "😈", premium: true, intensity: 3,
-    desc: "Réservé aux soirées qui s'annoncent très bien.",
-    q: [
+      // Questions supplémentaires du pack Hot.
       "Qu'est-ce que tu portes quand tu veux vraiment séduire ?",
       { t: "Plutôt lumière tamisée ou obscurité totale ?", d: 1 },
       "Où aimes-tu le plus être embrassé·e ?",
@@ -1298,7 +1290,6 @@ function renderShop() {
       '<span class="emoji">' + p.emoji + '</span>' +
       '<span class="info">' +
         '<span class="title">' + p.title + '</span>' +
-        '<span class="desc">' + p.desc + '</span>' +
       '</span>' +
       (isPackUnlocked(p.id)
         ? '<span class="owned-tick">✓</span>'
@@ -1320,8 +1311,6 @@ function renderPacks() {
         '<span class="title">' + p.title +
           (p.premium ? ' <span class="badge">Premium</span>' : '') +
           (unlocked ? '' : ' 🔒') + '</span>' +
-        '<span class="desc">' + p.desc + '</span>' +
-        '<span class="meta">' + '🌶️'.repeat(p.intensity) + '</span>' +
       '</span>' +
       '<span class="tick">✓</span>';
     b.onclick = () => {
@@ -1395,36 +1384,6 @@ function endGame() {
 }
 
 renderPacks();
-
-/* ============ Installation sur l'écran d'accueil (PWA) ============
-   Chrome/Android ne propose l'installation que si la page a un
-   manifeste et un service worker. On relaie sa proposition par un
-   vrai bouton sur l'accueil, plus visible pour les testeurs. */
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => navigator.serviceWorker.register('sw.js'));
-}
-/* Safari iOS n'a pas de popup d'installation : on affiche la marche
-   à suivre, seulement sur iPhone/iPad et hors app déjà installée. */
-const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
-const isStandalone = navigator.standalone === true
-  || matchMedia('(display-mode: standalone)').matches;
-if (isIOS && !isStandalone) {
-  document.getElementById('iosHint').hidden = false;
-}
-let installPrompt = null;
-window.addEventListener('beforeinstallprompt', (e) => {
-  e.preventDefault();
-  installPrompt = e;
-  document.getElementById('installBtn').hidden = false;
-});
-function installApp() {
-  if (!installPrompt) return;
-  installPrompt.prompt();
-  installPrompt.userChoice.then(() => {
-    installPrompt = null;
-    document.getElementById('installBtn').hidden = true;
-  });
-}
 </script>
 </body>
 </html>

@@ -96,8 +96,7 @@ consomptible) pour les sept. Aucun abonnement.
 | `flirt_premium_lifetime` | 2,99 € | Flirt Premium à vie |
 | `flirt_bundle_tout` | 4,99 € | Tout Flirt |
 | `flirt_pack_coeur` | 0,99 € | Pack Cœur à Cœur |
-| `flirt_pack_hot` | 0,99 € | Pack Un peu Hot |
-| `flirt_pack_vraiment_hot` | 0,99 € | Pack Vraiment Hot |
+| `flirt_pack_hot` | 0,99 € | Pack Hot |
 | `flirt_pack_dilemmes` | 0,99 € | Pack Dilemmes & Débats |
 | `flirt_pack_couple` | 0,99 € | Pack Couple Confirmé |
 

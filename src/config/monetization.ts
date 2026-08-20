@@ -44,7 +44,6 @@ export const ENTITLEMENTS: Record<string, string[]> = {
     'flirt_bundle_tout',
     'flirt_pack_coeur',
     'flirt_pack_hot',
-    'flirt_pack_vraiment_hot',
     'flirt_pack_dilemmes',
     'flirt_pack_couple',
   ],

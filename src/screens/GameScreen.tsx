@@ -4,8 +4,7 @@
  * Une question à la fois, en plein écran. Les cartes défilent en
  * continu, sans pause ni compteur : une carte, une question, et les
  * joueurs décident qui répond. Zéro publicité ici : rien ne doit
- * casser le rythme de la conversation. On peut passer une question
- * qui ne convient pas, et rejouer à l'infini.
+ * casser le rythme de la conversation. On peut rejouer à l'infini.
  */
 import * as Haptics from 'expo-haptics';
 import React, { useRef, useState } from 'react';
@@ -56,13 +55,6 @@ export default function GameScreen({ navigation, route }: ScreenProps<'Game'>) {
     setIndex((i) => i - 1);
   };
 
-  const skip = () => {
-    // La question passée est renvoyée en fin de pioche : on ne la perd pas.
-    if (!current) return;
-    Haptics.selectionAsync().catch(() => {});
-    setDeck((d) => [...d.slice(0, index), ...d.slice(index + 1), current]);
-  };
-
   const replay = () => {
     setDeck(buildDeck(packIds));
     setIndex(0);
@@ -80,7 +72,7 @@ export default function GameScreen({ navigation, route }: ScreenProps<'Game'>) {
             Vous vous connaissez déjà beaucoup mieux.
             {'\n'}La suite se passe sans téléphone…
           </Text>
-          <Button label="Rejouer avec les mêmes thèmes" onPress={replay} style={styles.endButton} />
+          <Button label="Rejouer avec le même thème" onPress={replay} style={styles.endButton} />
           <Button
             label="Retour à l'accueil"
             variant="ghost"
@@ -111,12 +103,6 @@ export default function GameScreen({ navigation, route }: ScreenProps<'Game'>) {
           variant="ghost"
           onPress={goBack}
           disabled={index === 0}
-          style={styles.footerButton}
-        />
-        <Button
-          label="Passer cette question"
-          variant="ghost"
-          onPress={skip}
           style={styles.footerButton}
         />
       </View>
