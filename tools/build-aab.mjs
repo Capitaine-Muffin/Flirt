@@ -18,11 +18,21 @@
  * Le résultat est affiché en fin d'exécution.
  */
 import { execFileSync } from 'node:child_process';
-import { existsSync, readFileSync } from 'node:fs';
+import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-const racine = path.dirname(path.dirname(fileURLToPath(import.meta.url)));
+/**
+ * La racine du projet. On préfère le dossier courant quand c'est bien le
+ * projet : sous Windows, le chemin réel (`.../Capitaine muffin/...`) fait
+ * dépasser la limite des 260 caractères pendant la compilation C++, et on
+ * s'en sort en lançant le build depuis un lien de dossier plus court.
+ * Repartir de l'emplacement du script annulerait ce raccourci, puisqu'il
+ * résout le lien.
+ */
+const racine = existsSync(path.join(process.cwd(), 'app.json'))
+  ? process.cwd()
+  : path.dirname(path.dirname(fileURLToPath(import.meta.url)));
 
 const versionCode = process.argv[2];
 if (!/^\d+$/.test(versionCode ?? '')) {
@@ -74,25 +84,86 @@ if (!existsSync(gradlew)) {
   process.exit(1);
 }
 
+deplacerDossierCxx();
+
 console.log(`Fabrication du .aab (versionCode ${versionCode})…`);
 
-execFileSync(
-  gradlew,
-  [
-    'app:bundleRelease',
-    '-x',
-    'lint',
-    '-x',
-    'test',
-    '--build-cache',
-    `-Pandroid.injected.version.code=${versionCode}`,
-    `-Pandroid.injected.signing.store.file=${cheminCle}`,
-    `-Pandroid.injected.signing.store.password=${cle.keystorePassword}`,
-    `-Pandroid.injected.signing.key.alias=${cle.keyAlias}`,
-    `-Pandroid.injected.signing.key.password=${cle.keyPassword}`,
-  ],
-  { cwd: path.join(racine, 'android'), stdio: 'inherit', env },
-);
+// Sur Windows, gradlew est un .bat : Node refuse de le lancer directement
+// depuis Node 20, il faut passer par le shell. Mais le shell recoupe la
+// ligne de commande sur les espaces — et le projet vit dans un dossier qui
+// en contient. D'où les guillemets sur tout ce qui est un chemin.
+const windows = process.platform === 'win32';
+const proteger = (valeur) => (windows ? `"${valeur}"` : valeur);
+
+try {
+  execFileSync(
+    proteger(gradlew),
+    [
+      'app:bundleRelease',
+      '-x',
+      'lint',
+      '-x',
+      'test',
+      '--build-cache',
+      `-Pandroid.injected.version.code=${versionCode}`,
+      proteger(`-Pandroid.injected.signing.store.file=${cheminCle}`),
+      `-Pandroid.injected.signing.store.password=${cle.keystorePassword}`,
+      `-Pandroid.injected.signing.key.alias=${cle.keyAlias}`,
+      `-Pandroid.injected.signing.key.password=${cle.keyPassword}`,
+    ],
+    {
+      cwd: path.join(racine, 'android'),
+      stdio: 'inherit',
+      env,
+      shell: windows,
+    },
+  );
+} catch (erreur) {
+  // Surtout ne pas relayer l'erreur telle quelle : elle contient la ligne
+  // de commande complète, mots de passe de la clé compris, et finirait
+  // recopiée dans un journal.
+  console.error(`\nÉchec du build (code ${erreur.status ?? 'inconnu'}).`);
+  console.error('Le détail est affiché ci-dessus par Gradle.');
+  process.exit(1);
+}
 
 const sortie = path.join(racine, 'android', 'app', 'build', 'outputs', 'bundle', 'release', 'app-release.aab');
 console.log(existsSync(sortie) ? `\nPrêt : ${sortie}` : '\nBuild terminé mais .aab introuvable.');
+
+/**
+ * Sort la compilation C++ du dossier du projet, vers `C:\cxx`.
+ *
+ * Le chemin réel du projet est déjà long, et CMake y ajoute une centaine
+ * de caractères (`android/app/.cxx/RelWithDebInfo/<hash>/<abi>/…`). On
+ * dépasse alors les 260 caractères de Windows et `ninja` s'arrête — y
+ * compris avec `LongPathsEnabled`, qu'il n'exploite pas.
+ *
+ * Écrit dans `android/app/build.gradle`, qui est régénéré par
+ * `expo prebuild` : d'où la vérification à chaque build plutôt qu'une
+ * modification faite une fois pour toutes.
+ */
+function deplacerDossierCxx() {
+  if (process.platform !== 'win32') return;
+
+  const chemin = path.join(racine, 'android', 'app', 'build.gradle');
+  const contenu = readFileSync(chemin, 'utf8');
+  if (contenu.includes('buildStagingDirectory')) return;
+
+  const ancre = 'android {\n';
+  if (!contenu.includes(ancre)) {
+    console.warn("Impossible de déplacer le dossier de compilation C++ : bloc android introuvable.");
+    return;
+  }
+
+  const ajout =
+    ancre +
+    '    // Ajouté par tools/build-aab.mjs : voir deplacerDossierCxx().\n' +
+    '    externalNativeBuild {\n' +
+    '        cmake {\n' +
+    '            buildStagingDirectory = file("C:/cxx/flirt")\n' +
+    '        }\n' +
+    '    }\n\n';
+
+  writeFileSync(chemin, contenu.replace(ancre, ajout));
+  console.log('Compilation C++ redirigée vers C:/cxx/flirt (limite Windows des 260 caractères).');
+}
