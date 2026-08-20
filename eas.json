@@ -11,6 +11,17 @@
     "preview": {
       "distribution": "internal"
     },
+    "test-pub": {
+      "extends": "production",
+      "autoIncrement": false,
+      "distribution": "internal",
+      "android": {
+        "buildType": "apk"
+      },
+      "env": {
+        "EXPO_PUBLIC_USE_TEST_ADS": "1"
+      }
+    },
     "production": {
       "autoIncrement": true,
       "environment": "production",

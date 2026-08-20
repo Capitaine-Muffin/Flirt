@@ -36,5 +36,11 @@ export const BANNER_UNIT_ID = {
 /**
  * En développement, on force les blocs de test même si les vrais sont
  * configurés : c'est la règle d'AdMob, et c'est ce qui protège le compte.
+ *
+ * `EXPO_PUBLIC_USE_TEST_ADS=1` force le même comportement dans un build
+ * compilé en release. Utile pour vérifier que la publicité est bien câblée
+ * (SDK, manifeste, emplacements) sans dépendre du remplissage d'un vrai
+ * bloc, qui peut rester vide pendant des heures après sa création. À ne
+ * jamais laisser actif sur le build envoyé en production.
  */
-export const USE_TEST_ADS = __DEV__;
+export const USE_TEST_ADS = __DEV__ || process.env.EXPO_PUBLIC_USE_TEST_ADS === '1';
