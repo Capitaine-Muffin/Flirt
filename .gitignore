@@ -43,3 +43,6 @@ yarn-error.*
 # backend
 server/data/
 .env
+
+# Coordination entre IA (local, jamais commité)
+ETAT-ACTUEL.md

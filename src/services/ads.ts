@@ -85,7 +85,10 @@ async function start(): Promise<boolean> {
   const ads = getNativeAds();
   if (!ads) return false;
 
-  if (!(await gatherConsent(ads))) return false;
+  // Le consentement ajuste seulement pub personnalisée ou non : un
+  // utilisateur qui refuse, ou qui ferme le formulaire sans choisir, a
+  // quand même des pubs. Seuls les premium n'en ont pas.
+  await gatherConsent(ads);
 
   await ads.default().initialize();
   live = true;
@@ -94,11 +97,9 @@ async function start(): Promise<boolean> {
 
 /**
  * Recueille le consentement RGPD via la plateforme de messagerie de Google
- * (UMP). Obligatoire en Europe avant toute annonce.
- *
- * En cas d'échec, on renvoie `false` : pas de bannière du tout. Perdre
- * quelques centimes vaut mieux que diffuser une annonce personnalisée sans
- * consentement valable.
+ * (UMP). Obligatoire en Europe avant toute annonce personnalisée — son
+ * résultat ne bloque plus l'affichage des pubs (voir `start`), seulement
+ * leur personnalisation.
  */
 async function gatherConsent(ads: any): Promise<boolean> {
   const { AdsConsent, AdsConsentStatus } = ads;
