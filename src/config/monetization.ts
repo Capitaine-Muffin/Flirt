@@ -38,7 +38,7 @@ export const REVENUECAT_KEY_IOS = process.env.EXPO_PUBLIC_REVENUECAT_KEY_IOS ?? 
 export const ENTITLEMENTS: Record<string, string[]> = {
   /** Plus de publicité. */
   premium: ['flirt_premium_lifetime'],
-  /** Tout : premium + les cinq packs. */
+  /** Tout : premium + les quatre packs. */
   tout: [
     'flirt_premium_lifetime',
     'flirt_bundle_tout',
@@ -47,6 +47,11 @@ export const ENTITLEMENTS: Record<string, string[]> = {
     'flirt_pack_dilemmes',
     'flirt_pack_couple',
   ],
+  /** Un pack acheté seul. Un droit par pack, sinon rien ne le débloque. */
+  pack_coeur: ['flirt_pack_coeur'],
+  pack_hot: ['flirt_pack_hot'],
+  pack_dilemmes: ['flirt_pack_dilemmes'],
+  pack_couple: ['flirt_pack_couple'],
 };
 
 /**

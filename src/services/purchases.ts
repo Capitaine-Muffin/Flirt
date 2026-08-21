@@ -181,8 +181,11 @@ export async function restorePurchases(): Promise<string[]> {
 /**
  * Ce que possède l'utilisateur d'après le store. Appelé au démarrage :
  * le store fait foi, la sauvegarde locale n'est qu'un cache.
+ *
+ * `null` signifie « pas de réponse du store » (simulation, hors ligne) :
+ * l'app garde alors son cache au lieu de le vider.
  */
-export async function getActiveProductIds(): Promise<string[]> {
-  if (!live) return [];
+export async function getActiveProductIds(): Promise<string[] | null> {
+  if (!live) return null;
   return native.activeProductIds();
 }

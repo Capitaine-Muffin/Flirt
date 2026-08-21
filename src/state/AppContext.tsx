@@ -55,6 +55,23 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     });
   }, []);
 
+  /**
+   * Aligne les achats sur ce que dit le store, ajouts **et retraits**.
+   *
+   * `registerPurchases` ne fait qu'ajouter : elle sert quand on apprend un
+   * achat (paiement, restauration). Ici on remplace, parce qu'un produit
+   * remboursé doit disparaître — sans quoi il suffirait d'acheter puis de
+   * demander un remboursement pour garder le contenu.
+   */
+  const syncPurchases = useCallback((productIds: string[]) => {
+    setState((prev) => {
+      const identique =
+        prev.purchases.length === productIds.length &&
+        prev.purchases.every((id) => productIds.includes(id));
+      return identique ? prev : { ...prev, purchases: [...productIds] };
+    });
+  }, []);
+
   // 1. Cache local d'abord (rapide), puis vérification auprès du store.
   useEffect(() => {
     let cancelled = false;
@@ -71,7 +88,10 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
       try {
         await initPurchases();
         const owned = await getActiveProductIds();
-        if (!cancelled) registerPurchases(owned);
+        // `null` = le store n'a pas répondu (simulation, hors ligne) : on
+        // garde le cache. Sinon sa réponse remplace la liste — c'est ce qui
+        // retire l'accès après un remboursement.
+        if (!cancelled && owned) syncPurchases(owned);
       } catch {
         // Hors ligne : on reste sur le cache local.
       }
@@ -80,7 +100,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     return () => {
       cancelled = true;
     };
-  }, [registerPurchases]);
+  }, [registerPurchases, syncPurchases]);
 
   // 2. Toute évolution des achats est réécrite sur le téléphone.
   useEffect(() => {

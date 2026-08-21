@@ -159,35 +159,42 @@ export async function restore(): Promise<string[]> {
   }
 }
 
-/** Ce que possède l'utilisateur, d'après RevenueCat (source de vérité). */
-export async function activeProductIds(): Promise<string[]> {
-  if (!configured) return [];
+/**
+ * Ce que possède l'utilisateur, d'après RevenueCat (source de vérité).
+ *
+ * Renvoie `null` — et non une liste vide — quand le store n'a pas répondu :
+ * l'appelant remplace sa liste d'achats par celle-ci, et confondre « cet
+ * utilisateur ne possède rien » avec « on n'a pas pu demander » retirerait
+ * ses achats à quelqu'un hors ligne.
+ */
+export async function activeProductIds(): Promise<string[] | null> {
+  if (!configured) return null;
   try {
     return ownedFrom(await loadNative().getCustomerInfo());
   } catch {
-    return [];
+    return null;
   }
 }
 
 /**
  * Traduit un `customerInfo` RevenueCat en liste d'identifiants produits.
  *
- * Deux sources, réunies : les droits actifs (si les entitlements sont
- * configurés dans RevenueCat) et la liste brute des produits achetés (qui
- * marche même sans entitlements). Les achats de Flirt étant définitifs —
- * aucun abonnement — un produit acheté reste acquis.
+ * Seuls les **droits actifs** font foi. Les autres listes que renvoie
+ * RevenueCat (`allPurchasedProductIdentifiers`,
+ * `nonSubscriptionTransactions`) sont un historique : un achat remboursé y
+ * reste inscrit pour toujours. S'en servir laissait le contenu débloqué
+ * après un remboursement — on pouvait payer, se faire rembourser, et tout
+ * garder.
+ *
+ * Conséquence : chaque produit vendu doit être rattaché à un droit dans le
+ * tableau de bord RevenueCat, sinon son acheteur n'obtient rien. La
+ * correspondance droit → produits est dans `config/monetization.ts`.
  */
 function ownedFrom(customerInfo: any): string[] {
   const owned = new Set<string>();
 
   for (const entitlementId of Object.keys(customerInfo?.entitlements?.active ?? {})) {
     for (const productId of ENTITLEMENTS[entitlementId] ?? []) owned.add(productId);
-  }
-  for (const productId of customerInfo?.allPurchasedProductIdentifiers ?? []) {
-    owned.add(baseProductId(productId));
-  }
-  for (const tx of customerInfo?.nonSubscriptionTransactions ?? []) {
-    if (tx?.productIdentifier) owned.add(baseProductId(tx.productIdentifier));
   }
 
   return [...owned];
