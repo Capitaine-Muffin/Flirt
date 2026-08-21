@@ -18,7 +18,11 @@ import React, {
   useState,
 } from 'react';
 import { PACKS, PRODUCT_IDS } from '../data/questions';
-import { getActiveProductIds, initPurchases } from '../services/purchases';
+import {
+  getActiveProductIds,
+  initPurchases,
+  subscribeToOwnedProducts,
+} from '../services/purchases';
 
 const STORAGE_KEY = 'flirt/state/v1';
 
@@ -75,6 +79,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   // 1. Cache local d'abord (rapide), puis vérification auprès du store.
   useEffect(() => {
     let cancelled = false;
+    let unsubscribe = () => {};
 
     (async () => {
       try {
@@ -92,6 +97,14 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
         // garde le cache. Sinon sa réponse remplace la liste — c'est ce qui
         // retire l'accès après un remboursement.
         if (!cancelled && owned) syncPurchases(owned);
+
+        // Puis on reste à l'écoute : le store rafraîchit ses informations
+        // au retour au premier plan, donc un remboursement s'applique sans
+        // attendre le prochain démarrage.
+        if (cancelled) return;
+        unsubscribe = subscribeToOwnedProducts((productIds) => {
+          if (!cancelled) syncPurchases(productIds);
+        });
       } catch {
         // Hors ligne : on reste sur le cache local.
       }
@@ -99,6 +112,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
 
     return () => {
       cancelled = true;
+      unsubscribe();
     };
   }, [registerPurchases, syncPurchases]);
 

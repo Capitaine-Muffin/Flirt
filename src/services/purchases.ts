@@ -179,6 +179,18 @@ export async function restorePurchases(): Promise<string[]> {
 }
 
 /**
+ * Prévient quand les achats changent sans que l'app y soit pour quelque
+ * chose : remboursement accordé par Google, achat fait depuis un autre
+ * appareil. Renvoie la fonction de désabonnement.
+ */
+export function subscribeToOwnedProducts(
+  onChange: (productIds: string[]) => void,
+): () => void {
+  if (!live) return () => {};
+  return native.subscribeToOwnedProducts(onChange);
+}
+
+/**
  * Ce que possède l'utilisateur d'après le store. Appelé au démarrage :
  * le store fait foi, la sauvegarde locale n'est qu'un cache.
  *

@@ -177,6 +177,36 @@ export async function activeProductIds(): Promise<string[] | null> {
 }
 
 /**
+ * Prévient à chaque fois que les droits de l'utilisateur changent.
+ *
+ * RevenueCat rafraîchit ses informations quand l'app revient au premier
+ * plan : sans cet abonnement, un remboursement ne serait pris en compte
+ * qu'au prochain démarrage complet.
+ *
+ * Renvoie la fonction de désabonnement.
+ */
+export function subscribeToOwnedProducts(
+  onChange: (productIds: string[]) => void,
+): () => void {
+  if (!configured) return () => {};
+
+  const Purchases = loadNative();
+  const listener = (customerInfo: any) => onChange(ownedFrom(customerInfo));
+  try {
+    Purchases.addCustomerInfoUpdateListener(listener);
+    return () => {
+      try {
+        Purchases.removeCustomerInfoUpdateListener(listener);
+      } catch {
+        // SDK déjà démonté : il n'y a plus rien à détacher.
+      }
+    };
+  } catch {
+    return () => {};
+  }
+}
+
+/**
  * Traduit un `customerInfo` RevenueCat en liste d'identifiants produits.
  *
  * Seuls les **droits actifs** font foi. Les autres listes que renvoie
