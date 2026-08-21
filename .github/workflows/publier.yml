@@ -1,0 +1,111 @@
+# Fabrique le `.aab` et l'envoie sur Google Play.
+#
+# Pourquoi en CI plutôt que sur le PC : les pièges qui ont coûté le plus de
+# temps (chemin Windows de 260 caractères, JDK trop récent, paquet
+# JavaScript périmé réutilisé par Gradle) n'existent pas sur un runner
+# Linux propre. `tools/build-aab.mjs` reste utile pour itérer en local ;
+# la version envoyée au Store vient d'ici.
+#
+# Deux déclencheurs :
+#   - un tag `v*` → test interne
+#   - un lancement manuel → piste au choix
+#
+# Le `versionCode` est calculé, jamais saisi : Play refuse un numéro
+# inférieur ou égal au dernier envoyé, et c'est une erreur facile à faire
+# à la main. BASE tient compte des dix versions déjà publiées à la main.
+
+name: Publier sur Google Play
+
+on:
+  push:
+    tags: ['v*']
+  workflow_dispatch:
+    inputs:
+      piste:
+        description: Piste de publication
+        type: choice
+        options: [internal, alpha, beta, production]
+        default: internal
+
+env:
+  BASE_VERSION_CODE: 10
+
+jobs:
+  publier:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+
+      - run: npm ci
+
+      - name: Reconstituer la clé de signature
+        env:
+          KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+          KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+        run: |
+          mkdir -p credentials/android
+          echo "$KEYSTORE_BASE64" | base64 -d > credentials/android/keystore.jks
+          # Le format attendu par tools/build-aab.mjs, celui qu'exporte EAS.
+          node -e '
+            const fs = require("node:fs");
+            fs.writeFileSync("credentials.json", JSON.stringify({
+              android: { keystore: {
+                keystorePath: "credentials/android/keystore.jks",
+                keystorePassword: process.env.KEYSTORE_PASSWORD,
+                keyAlias: process.env.KEY_ALIAS,
+                keyPassword: process.env.KEY_PASSWORD,
+              }},
+            }));
+          '
+
+      - name: Calculer le versionCode
+        run: echo "VERSION_CODE=$((BASE_VERSION_CODE + GITHUB_RUN_NUMBER))" >> "$GITHUB_ENV"
+
+      - name: Générer le dossier android/
+        env:
+          EXPO_PUBLIC_ADMOB_APP_ID_ANDROID: ${{ secrets.EXPO_PUBLIC_ADMOB_APP_ID_ANDROID }}
+        run: npx expo prebuild --platform android --no-install
+
+      - name: Fabriquer le .aab
+        env:
+          EXPO_PUBLIC_ADMOB_APP_ID_ANDROID: ${{ secrets.EXPO_PUBLIC_ADMOB_APP_ID_ANDROID }}
+          EXPO_PUBLIC_ADMOB_BANNER_ANDROID: ${{ secrets.EXPO_PUBLIC_ADMOB_BANNER_ANDROID }}
+          EXPO_PUBLIC_REVENUECAT_KEY_ANDROID: ${{ secrets.EXPO_PUBLIC_REVENUECAT_KEY_ANDROID }}
+        run: node tools/build-aab.mjs "$VERSION_CODE"
+
+      # Un `.aab` peut s'installer sans erreur en embarquant un paquet
+      # JavaScript périmé : c'est arrivé, et la version publiée n'avait pas
+      # les corrections. On refuse de publier un paquet vide ou minuscule.
+      - name: Vérifier le paquet JavaScript
+        run: |
+          AAB=android/app/build/outputs/bundle/release/app-release.aab
+          unzip -p "$AAB" base/assets/index.android.bundle > /tmp/bundle.hbc
+          TAILLE=$(stat -c%s /tmp/bundle.hbc)
+          echo "Paquet JavaScript : $TAILLE octets"
+          test "$TAILLE" -gt 500000 || { echo "Paquet suspect, publication annulée."; exit 1; }
+
+      - name: Envoyer sur Google Play
+        env:
+          GOOGLE_PLAY_SERVICE_ACCOUNT: ${{ secrets.GOOGLE_PLAY_SERVICE_ACCOUNT }}
+        run: |
+          NOTES=""
+          if [ -f notes-de-version.txt ]; then NOTES="--notes notes-de-version.txt"; fi
+          node tools/publier.mjs \
+            android/app/build/outputs/bundle/release/app-release.aab \
+            --piste "${{ inputs.piste || 'internal' }}" $NOTES
+
+      - name: Effacer la clé
+        if: always()
+        run: rm -rf credentials credentials.json
