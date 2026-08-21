@@ -30,7 +30,7 @@ Réponses **courtes**. Va droit au but.
 Les builds se font **en local**, jamais avec un crédit EAS :
 `node tools/build-aab.mjs <versionCode>`.
 
-- `docs/RECETTE_PUBLICATION.md` — la procédure complète, avec les pièges
-  qui ne produisent aucune erreur (prix hors taxes, droits RevenueCat,
-  paquet JavaScript périmé dans le `.aab`).
-- `docs/AUTOMATISATION.md` — ce qui peut être scripté pour aller plus vite.
+- `docs/BUILD.md` — fabriquer l'`.aab`, et les pièges propres à Expo.
+- [publier-sur-play](https://github.com/Capitaine-Muffin/publier-sur-play) —
+  la procédure Store, commune à tous les jeux : prix hors taxes, droits
+  RevenueCat, déclarations qui bloquent l'envoi sans apparaître.
