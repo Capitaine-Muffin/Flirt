@@ -85,6 +85,7 @@ if (!existsSync(gradlew)) {
 }
 
 deplacerDossierCxx();
+inscrireVersionCode();
 
 console.log(`Fabrication du .aab (versionCode ${versionCode})…`);
 
@@ -105,7 +106,6 @@ try {
       '-x',
       'test',
       '--build-cache',
-      `-Pandroid.injected.version.code=${versionCode}`,
       proteger(`-Pandroid.injected.signing.store.file=${cheminCle}`),
       `-Pandroid.injected.signing.store.password=${cle.keystorePassword}`,
       `-Pandroid.injected.signing.key.alias=${cle.keyAlias}`,
@@ -129,6 +129,36 @@ try {
 
 const sortie = path.join(racine, 'android', 'app', 'build', 'outputs', 'bundle', 'release', 'app-release.aab');
 console.log(existsSync(sortie) ? `\nPrêt : ${sortie}` : '\nBuild terminé mais .aab introuvable.');
+
+/**
+ * Écrit le `versionCode` demandé dans `android/app/build.gradle`.
+ *
+ * On n'utilise pas `-Pandroid.injected.version.code` : Android Gradle ne
+ * l'honore que lorsqu'il se croit lancé depuis Android Studio, et le
+ * bundle sortait donc silencieusement en versionCode 1 — que Play refuse
+ * comme une régression.
+ *
+ * Comme pour le dossier C++, le fichier est régénéré par `expo prebuild`,
+ * d'où la réécriture à chaque build.
+ */
+function inscrireVersionCode() {
+  const chemin = path.join(racine, 'android', 'app', 'build.gradle');
+  const contenu = readFileSync(chemin, 'utf8');
+  let remplace = contenu.replace(/versionCode\s+\d+/, `versionCode ${versionCode}`);
+
+  if (remplace === contenu && !contenu.includes(`versionCode ${versionCode}`)) {
+    console.error("Impossible d'inscrire le versionCode dans build.gradle.");
+    process.exit(1);
+  }
+
+  // `app.json` fait foi pour le numéro affiché aux joueurs, même sans
+  // repasser par `expo prebuild`.
+  const { expo } = JSON.parse(readFileSync(path.join(racine, 'app.json'), 'utf8'));
+  remplace = remplace.replace(/versionName\s+"[^"]*"/, `versionName "${expo.version}"`);
+
+  writeFileSync(chemin, remplace);
+  console.log(`Version : ${expo.version} (code ${versionCode})`);
+}
 
 /**
  * Sort la compilation C++ du dossier du projet, vers `C:\cxx`.
