@@ -18,7 +18,7 @@
  * Le résultat est affiché en fin d'exécution.
  */
 import { execFileSync } from 'node:child_process';
-import { existsSync, readFileSync, writeFileSync } from 'node:fs';
+import { existsSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -86,6 +86,7 @@ if (!existsSync(gradlew)) {
 
 deplacerDossierCxx();
 inscrireVersionCode();
+forcerRegenerationDuBundle();
 
 console.log(`Fabrication du .aab (versionCode ${versionCode})…`);
 
@@ -129,6 +130,22 @@ try {
 
 const sortie = path.join(racine, 'android', 'app', 'build', 'outputs', 'bundle', 'release', 'app-release.aab');
 console.log(existsSync(sortie) ? `\nPrêt : ${sortie}` : '\nBuild terminé mais .aab introuvable.');
+
+/**
+ * Supprime le paquet JavaScript déjà généré, pour que Gradle le refasse.
+ *
+ * Gradle jugeait cette étape « à jour » et gardait un paquet fabriqué lors
+ * d'un build précédent : le `.aab` embarquait donc du code périmé, sans
+ * les corrections faites depuis — un piège d'autant plus vicieux que le
+ * fichier avait l'air neuf et s'installait sans erreur.
+ */
+function forcerRegenerationDuBundle() {
+  const genere = path.join(racine, 'android', 'app', 'build', 'generated', 'assets', 'react');
+  if (existsSync(genere)) {
+    rmSync(genere, { recursive: true, force: true });
+    console.log('Paquet JavaScript précédent supprimé : il sera refabriqué.');
+  }
+}
 
 /**
  * Écrit le `versionCode` demandé dans `android/app/build.gradle`.
