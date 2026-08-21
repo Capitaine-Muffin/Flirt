@@ -10,6 +10,9 @@ clés RevenueCat, mots de passe) ne sont **jamais** écrits ici.
 Compter, pour une première app : une journée de configuration, puis
 jusqu'à 7 jours d'examen Google.
 
+La moitié de ces gestes est automatisable : voir
+[`AUTOMATISATION.md`](AUTOMATISATION.md).
+
 ---
 
 ## Vue d'ensemble
