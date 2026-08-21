@@ -49,4 +49,5 @@ ETAT-ACTUEL.md
 
 # Cles de signature (jamais commitees)
 credentials.json
+credentials/
 *.keystore

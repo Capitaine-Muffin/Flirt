@@ -1,6 +1,36 @@
 # Changelog
 
-## [Unreleased]
+## [1.0.0] — 2026-08-21
+
+Première version publique, envoyée en production sur Google Play.
+
+Trois défauts de monétisation corrigés avant la sortie, qu'aucun message
+d'erreur ne signalait :
+
+- Les achats échouaient tous sur « ce produit n'est pas disponible sur
+  votre compte » : le store était interrogé sur ses abonnements alors que
+  tous les produits de Flirt sont des achats uniques.
+- Un contenu remboursé restait débloqué. L'app n'ajoutait que des achats à
+  sa liste, sans jamais rien en retirer — on pouvait payer, demander un
+  remboursement à Google et tout garder.
+- Un remboursement n'était pris en compte qu'au démarrage suivant ; l'app
+  écoute désormais le store en continu.
+
+Une panne de facturation ne donne plus le produit gratuitement, et un
+identifiant renvoyé par Play est reconnu même quand il porte son option
+d'achat en suffixe.
+
+Les publicités s'affichent maintenant pour tout le monde sauf les
+acheteurs du sans-pub : refuser le consentement RGPD donne des annonces
+non personnalisées, plus aucune annonce du tout. Un bouton « Paramètres de
+confidentialité » permet de revenir sur ce choix à tout moment.
+
+Nouveaux documents : `docs/RECETTE_PUBLICATION.md` (la procédure complète
+de publication, pièges compris) et `docs/AUTOMATISATION.md` (ce qui peut
+être automatisé la prochaine fois). Nouvel outil `tools/build-aab.mjs`,
+qui fabrique en local un `.aab` signé sans consommer de crédit EAS.
+
+### Déjà prêt depuis la 0.6.x
 
 - Achats intégrés prêts pour la production : l'app bascule toute seule entre
   la simulation (Expo Go, aucun paiement réel) et les vrais paiements
@@ -17,7 +47,7 @@
 - Publicité prête pour la production sur le même principe : bannières
   AdMob réelles dès que les identifiants sont fournis au build, cadre de
   simulation le reste du temps. Le consentement RGPD (UMP) est demandé
-  avant toute annonce, et aucune bannière ne s'affiche s'il échoue.
+  avant toute annonce.
 - Une bannière qui ne se charge pas ne laisse plus de cadre gris à sa
   place, et les utilisateurs premium ne voient aucun formulaire de
   consentement.
