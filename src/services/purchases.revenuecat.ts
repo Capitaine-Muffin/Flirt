@@ -41,6 +41,18 @@ export interface StoreProduct {
   priceCents: number;
 }
 
+/**
+ * Catégorie à passer à `getProducts`. Sans elle, le SDK interroge les
+ * **abonnements** — c'est son défaut — et Play ne renvoie rien, puisque les
+ * produits de Flirt sont tous des achats uniques. L'app affichait alors
+ * « Ce produit n'est pas disponible sur votre compte » pour chaque achat.
+ *
+ * On passe la chaîne en dur plutôt que l'énumération `PRODUCT_CATEGORY` :
+ * le SDK est chargé par un `require` conditionnel (voir `loadNative`), donc
+ * un import statique planterait quand le module natif est absent.
+ */
+const ACHAT_UNIQUE = 'NON_SUBSCRIPTION';
+
 export type NativePurchaseOutcome =
   | { status: 'success'; productIds: string[] }
   | { status: 'cancelled' }
@@ -103,7 +115,7 @@ export async function configure(): Promise<boolean> {
 export async function fetchProducts(productIds: string[]): Promise<StoreProduct[]> {
   if (!configured) return [];
   try {
-    const products = await loadNative().getProducts(productIds);
+    const products = await loadNative().getProducts(productIds, ACHAT_UNIQUE);
     return (products ?? []).map((p: any) => ({
       productId: baseProductId(p.identifier),
       displayPrice: p.priceString,
@@ -120,7 +132,7 @@ export async function purchase(productId: string): Promise<NativePurchaseOutcome
 
   const Purchases = loadNative();
   try {
-    const products = await Purchases.getProducts([productId]);
+    const products = await Purchases.getProducts([productId], ACHAT_UNIQUE);
     const product = (products ?? []).find(
       (p: any) => baseProductId(p.identifier) === productId,
     );
